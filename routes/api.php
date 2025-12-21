@@ -28,6 +28,7 @@ Route::get('/brands', [BrandController::class, 'index']);
 Route::get('/brands/{id}', [BrandController::class, 'show']);
 
 Route::get('/products', [ProductController::class, 'index']);
+Route::post('/products/search-similar', [ProductController::class, 'searchSimilar']); // New Semantic Search Endpoint
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::get('/countries', [CountryController::class, 'index']);

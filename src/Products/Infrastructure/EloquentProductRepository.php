@@ -9,12 +9,18 @@ use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
 use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentProductRepository implements ProductRepository
 {
     public function find(ValidUUID $id): ?Product
     {
         return Product::find($id->value());
+    }
+
+    public function findByIds(array $ids): Collection
+    {
+        return Product::whereIn('id', $ids)->get();
     }
 
     public function findByExternalId(ValidUUID $storeId, string $externalId): ?Product

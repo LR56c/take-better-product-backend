@@ -14,6 +14,7 @@
         "firebase/php-jwt": "^7.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "pgvector/pgvector": "^0.2.2",
         "rafaelwendel/phpsupabase": "^0.0.11"
     },
     "require-dev": {

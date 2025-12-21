@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Src\Products\Application\CreateProduct;
 use App\Models\Store;
-use Src\Shared\Infrastructure\Gemini\GeminiService;
+use Src\Products\Application\GenerateEmbedding;
 use Tests\TestCase;
 
 class CreateProductTest extends TestCase
@@ -15,13 +15,13 @@ class CreateProductTest extends TestCase
 
     public function test_it_creates_a_product_and_its_price_history_successfully()
     {
-        // Mock Gemini Service
-        $geminiMock = Mockery::mock(GeminiService::class);
-        $geminiMock->shouldReceive('generateEmbedding')
+        // Mock GenerateEmbedding Use Case
+        $generateEmbeddingMock = Mockery::mock(GenerateEmbedding::class);
+        $generateEmbeddingMock->shouldReceive('execute')
             ->once()
-            ->andReturn([0.1, 0.2, 0.3]); // Dummy vector
+            ->andReturn(array_fill(0, 768, 0.1)); // Correct dimension
 
-        $this->app->instance(GeminiService::class, $geminiMock);
+        $this->app->instance(GenerateEmbedding::class, $generateEmbeddingMock);
 
         // Arrange
         $useCase = $this->app->make(CreateProduct::class);

@@ -7,7 +7,7 @@ use Mockery;
 use Src\Products\Application\SyncProduct;
 use App\Models\Store;
 use App\Models\Product;
-use Src\Shared\Infrastructure\Gemini\GeminiService;
+use Src\Products\Application\GenerateEmbedding;
 use Tests\TestCase;
 
 class SyncProductTest extends TestCase
@@ -16,12 +16,12 @@ class SyncProductTest extends TestCase
 
     public function test_it_creates_new_product_if_not_exists()
     {
-        // Mock Gemini
-        $geminiMock = Mockery::mock(GeminiService::class);
-        $geminiMock->shouldReceive('generateEmbedding')
-            ->once()
-            ->andReturn([0.1, 0.2, 0.3]);
-        $this->app->instance(GeminiService::class, $geminiMock);
+        // Mock GenerateEmbedding
+        $this->mock(GenerateEmbedding::class, function ($mock) {
+            $mock->shouldReceive('execute')
+                ->once()
+                ->andReturn(array_fill(0, 768, 0.1)); // Correct dimension
+        });
 
         // Arrange
         $useCase = $this->app->make(SyncProduct::class);
@@ -50,12 +50,12 @@ class SyncProductTest extends TestCase
         ]);
     }
 
-    public function test_it_updates_existing_product_and_records_history()
+    public function test_it_updates_existing_product_and_does_not_generate_embedding()
     {
-        // Mock Gemini (should NOT be called for update)
-        $geminiMock = Mockery::mock(GeminiService::class);
-        $geminiMock->shouldNotReceive('generateEmbedding');
-        $this->app->instance(GeminiService::class, $geminiMock);
+        // Mock GenerateEmbedding (should NOT be called for update)
+        $this->mock(GenerateEmbedding::class, function ($mock) {
+            $mock->shouldNotReceive('execute');
+        });
 
         // Arrange
         $useCase = $this->app->make(SyncProduct::class);

@@ -9,6 +9,10 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Mockery;
+use Src\Products\Application\GenerateEmbedding;
+use Src\Products\Domain\ProductEmbedding; // Use the model
+use Pgvector\Laravel\Vector;
 
 class ProductEndpointsTest extends TestCase
 {
@@ -24,7 +28,10 @@ class ProductEndpointsTest extends TestCase
 
     public function test_it_can_store_a_new_product()
     {
-        // Arrange
+        $this->mock(GenerateEmbedding::class, function ($mock) {
+            $mock->shouldReceive('execute')->andReturn(array_fill(0, 768, 0.1));
+        });
+
         $store = Store::factory()->create();
         $brand = Brand::factory()->create();
 
@@ -32,7 +39,7 @@ class ProductEndpointsTest extends TestCase
             'store_id' => $store->id,
             'brand_id' => $brand->id,
             'title' => 'New Awesome Product',
-            'price' => 199.99,
+            'price' => 200,
             'url' => 'http://example.com/product',
             'external_id' => 'SKU-12345',
             'currency' => 'USD',
@@ -42,22 +49,23 @@ class ProductEndpointsTest extends TestCase
             ]
         ];
 
-        // Act
         $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
                          ->postJson('/api/products', $productData);
 
-        // Assert
         $response->assertStatus(201)
                  ->assertJsonPath('data.title', 'New Awesome Product');
 
         $this->assertDatabaseHas('products', ['title' => 'New Awesome Product']);
         $this->assertDatabaseHas('product_images', ['main' => true]);
-        $this->assertDatabaseHas('price_histories', ['price' => 199.99]);
+        $this->assertDatabaseHas('price_histories', ['price' => 200]);
     }
 
     public function test_it_can_sync_a_product_and_records_price_history()
     {
-        // Arrange
+        $this->mock(GenerateEmbedding::class, function ($mock) {
+            $mock->shouldReceive('execute')->andReturn(array_fill(0, 768, 0.1));
+        });
+
         $store = Store::factory()->create();
         $product = Product::factory()->create([
             'store_id' => $store->id,
@@ -74,16 +82,46 @@ class ProductEndpointsTest extends TestCase
             'currency' => 'USD',
         ];
 
-        // Act
         $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
                          ->postJson('/api/products/sync', $syncData);
 
-        // Assert
         $response->assertStatus(200)
                  ->assertJsonPath('data.title', 'Synced Product Title');
 
         $this->assertDatabaseHas('products', ['price' => 150]);
-        $this->assertDatabaseCount('price_histories', 2); // Initial + new one
+        $this->assertDatabaseCount('price_histories', 2);
         $this->assertDatabaseHas('price_histories', ['price' => 150]);
+    }
+
+    public function test_it_can_search_similar_products()
+    {
+        $vectorArray = array_fill(0, 768, 0.1);
+
+        $this->mock(GenerateEmbedding::class, function ($mock) use ($vectorArray) {
+            $mock->shouldReceive('execute')
+                 ->with('red lamp')
+                 ->andReturn($vectorArray);
+        });
+
+        $product = Product::factory()->create(['title' => 'Red Lamp']);
+
+        // Use the Domain Model to create the embedding
+        // This ensures the cast (Vector::class) is applied correctly
+        $embedding = new ProductEmbedding();
+        $embedding->product_id = $product->id;
+        $embedding->vector = new Vector($vectorArray);
+        $embedding->save();
+
+        $response = $this->postJson('/api/products/search-similar', [
+            'query' => 'red lamp',
+            'limit' => 5
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertNotEmpty($response->json('data'), 'Search returned no results. DB Count: ' . ProductEmbedding::count());
+
+        $response->assertJsonStructure(['data' => [['id', 'title', 'price']]]);
+        $this->assertEquals($product->id, $response->json('data.0.id'));
     }
 }

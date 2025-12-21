@@ -14,6 +14,7 @@ use Src\Products\Application\SearchProducts;
 use Src\Products\Application\CreateProduct;
 use Src\Products\Application\UpdateProduct;
 use Src\Products\Application\SyncProduct;
+use Src\Products\Application\SearchSimilarProducts;
 use Src\Products\Domain\Exceptions\ProductNotFound;
 use Src\Shared\Domain\Criteria\Criteria;
 use InvalidArgumentException;
@@ -31,7 +32,8 @@ class ProductController extends Controller
         private readonly SearchProducts $searchProducts,
         private readonly CreateProduct $createProduct,
         private readonly UpdateProduct $updateProduct,
-        private readonly SyncProduct $syncProduct
+        private readonly SyncProduct $syncProduct,
+        private readonly SearchSimilarProducts $searchSimilarProducts
     ) {}
 
     /**
@@ -108,6 +110,48 @@ class ProductController extends Controller
         } catch (InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    /**
+     * @OA\Post(
+     *      path="/products/search-similar",
+     *      operationId="searchSimilarProducts",
+     *      tags={"Products"},
+     *      summary="Search similar products",
+     *      description="Search products by semantic similarity using text query",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"query"},
+     *              @OA\Property(property="query", type="string", description="Text to search for (e.g. 'red lamp')"),
+     *              @OA\Property(property="limit", type="integer", default=10)
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/ProductResource"))
+     *          )
+     *      ),
+     *      @OA\Response(response=400, description="Bad Request")
+     * )
+     */
+    public function searchSimilar(Request $request): JsonResponse
+    {
+        $request->validate([
+            'query' => 'required|string',
+            'limit' => 'integer|min:1|max:50',
+        ]);
+
+        $result = $this->searchSimilarProducts->execute(
+            $request->input('query'),
+            (int) $request->input('limit', 10)
+        );
+
+        return response()->json([
+            'data' => ProductResource::collection($result->items()),
+        ]);
     }
 
     /**

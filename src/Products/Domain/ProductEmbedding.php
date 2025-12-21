@@ -4,6 +4,7 @@ namespace Src\Products\Domain;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Pgvector\Laravel\Vector;
 
 class ProductEmbedding extends Model
 {
@@ -19,7 +20,7 @@ class ProductEmbedding extends Model
     ];
 
     protected $casts = [
-        // 'vector' => Vector::class, // Removed until package is installed
+        'vector' => Vector::class,
     ];
 
     public function product()

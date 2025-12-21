@@ -7,7 +7,6 @@ use Src\Products\Domain\Product;
 use Src\Products\Domain\ProductRepository;
 use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\ValueObjects\UUIDError;
-use Src\Products\Domain\ProductAiRepository;
 use Src\Products\Domain\ProductEmbedding;
 use Src\Products\Domain\ProductEmbeddingRepository;
 use InvalidArgumentException;
@@ -16,7 +15,7 @@ class SyncProduct
 {
     public function __construct(
         private readonly ProductRepository $repository,
-        private readonly ProductAiRepository $aiRepository,
+        private readonly GenerateEmbedding $generateEmbedding,
         private readonly ProductEmbeddingRepository $embeddingRepository
     ) {}
 
@@ -47,7 +46,7 @@ class SyncProduct
             // Generate embedding only for new products
             if (!$existingProduct) {
                 $embeddingText = $product->title . ' ' . ($product->description ?? '');
-                $vector = $this->aiRepository->generateEmbedding($embeddingText);
+                $vector = $this->generateEmbedding->execute($embeddingText);
 
                 if ($vector) {
                     $embedding = new ProductEmbedding([

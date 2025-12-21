@@ -5,7 +5,6 @@ namespace Src\Products\Application;
 use Illuminate\Support\Facades\DB;
 use Src\Products\Domain\Product;
 use Src\Products\Domain\ProductRepository;
-use Src\Products\Domain\ProductAiRepository;
 use Src\Products\Domain\ProductEmbedding;
 use Src\Products\Domain\ProductEmbeddingRepository;
 
@@ -13,7 +12,7 @@ class CreateProduct
 {
     public function __construct(
         private readonly ProductRepository $repository,
-        private readonly ProductAiRepository $aiRepository,
+        private readonly GenerateEmbedding $generateEmbedding,
         private readonly ProductEmbeddingRepository $embeddingRepository
     ) {}
 
@@ -32,7 +31,7 @@ class CreateProduct
 
             // Generate and save embedding
             $embeddingText = $product->title . ' ' . ($product->description ?? '');
-            $vector = $this->aiRepository->generateEmbedding($embeddingText);
+            $vector = $this->generateEmbedding->execute($embeddingText);
 
             if ($vector) {
                 $embedding = new ProductEmbedding([
