@@ -8,7 +8,7 @@ This plan outlines the phases and tasks required to complete the "Code Quality a
 
 - [x] Task: Analyze existing code for adherence to PSR-12 coding standards.
 - [x] Task: Identify and document areas of inconsistent naming conventions.
-- [~] Task: Propose and apply automated code formatting using a tool like laravel/pint.
+- [x] Task: Propose and apply automated code formatting using a tool like laravel/pint. [4649b60]
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Code Consistency Review' (Protocol in workflow.md)
 
 ---
