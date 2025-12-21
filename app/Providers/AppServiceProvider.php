@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Src\Auth\Domain\AuthRepository;
+use Src\Auth\Infrastructure\SupabaseAuthRepository;
 use Src\Products\Domain\ProductRepository;
 use Src\Products\Infrastructure\EloquentProductRepository;
 use Src\Brands\Domain\BrandRepository;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CategoryRepository::class, EloquentCategoryRepository::class);
         $this->app->bind(StoreRepository::class, EloquentStoreRepository::class);
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
+        $this->app->bind(AuthRepository::class, SupabaseAuthRepository::class);
     }
 
     /**

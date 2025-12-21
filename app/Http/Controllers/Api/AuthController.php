@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use PHPSupabase\Service;
+use Src\Auth\Application\Login;
+use Src\Auth\Application\Register;
+use Src\Auth\Application\UpdateUser;
 
 /**
  * @OA\Tag(
@@ -16,15 +18,11 @@ use PHPSupabase\Service;
  */
 class AuthController extends Controller
 {
-    private Service $supabase;
-
-    public function __construct()
-    {
-        $this->supabase = new Service(
-            env('SUPABASE_KEY'),
-            env('SUPABASE_URL')
-        );
-    }
+    public function __construct(
+        private readonly Login $loginUseCase,
+        private readonly Register $registerUseCase,
+        private readonly UpdateUser $updateUserUseCase
+    ) {}
 
     /**
      * @OA\Post(
@@ -61,19 +59,11 @@ class AuthController extends Controller
         ]);
 
         try {
-            $auth = $this->supabase->createAuth();
-            $auth->signInWithEmailAndPassword($request->email, $request->password);
-            $data = $auth->data();
-
+            $data = $this->loginUseCase->execute($request->email, $request->password);
             return response()->json($data);
         } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-            if (isset($auth) && method_exists($auth, 'getError')) {
-                $libError = $auth->getError();
-                if ($libError) $errorMessage = $libError;
-            }
-
-            return response()->json(['error' => $errorMessage], 401);
+            Log::error('Login failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
     }
 
@@ -107,17 +97,11 @@ class AuthController extends Controller
         ]);
 
         try {
-            $auth = $this->supabase->createAuth();
-            $auth->createUserWithEmailAndPassword($validated['email'], $validated['password']);
-            $data = $auth->data();
+            $data = $this->registerUseCase->execute($validated['email'], $validated['password']);
             return response()->json($data, 201);
         } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-            if (isset($auth) && method_exists($auth, 'getError')) {
-                $libError = $auth->getError();
-                if ($libError) $errorMessage = $libError;
-            }
-            return response()->json(['error' => $errorMessage], 400);
+            Log::error('Registration failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -153,25 +137,11 @@ class AuthController extends Controller
         }
 
         try {
-            $auth = $this->supabase->createAuth();
-
-            $email = $request->input('email');
-            $password = $request->input('password');
-            $metaData = $request->input('data', []);
-
-            // updateUser($accessToken, $email, $password, $data)
-            $auth->updateUser($token, $email, $password, $metaData);
-            $data = $auth->data();
-
+            $data = $this->updateUserUseCase->execute($token, $request->all());
             return response()->json($data);
-
         } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-            if (isset($auth) && method_exists($auth, 'getError')) {
-                $libError = $auth->getError();
-                if ($libError) $errorMessage = $libError;
-            }
-            return response()->json(['error' => $errorMessage], 400);
+            Log::error('User update failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 }
