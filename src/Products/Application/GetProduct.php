@@ -2,7 +2,7 @@
 
 namespace Src\Products\Application;
 
-use Src\Products\Domain\Contracts\ProductRepository;
+use Src\Products\Domain\ProductRepository;
 use Src\Products\Domain\Exceptions\ProductNotFound;
 use Src\Products\Domain\Product;
 use Src\Shared\Domain\ValueObjects\ValidUUID;

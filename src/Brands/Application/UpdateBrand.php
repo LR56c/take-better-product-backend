@@ -3,7 +3,7 @@
 namespace Src\Brands\Application;
 
 use Src\Brands\Domain\Brand;
-use Src\Brands\Domain\Contracts\BrandRepository;
+use Src\Brands\Domain\BrandRepository;
 use Src\Brands\Domain\Exceptions\BrandNotFound;
 use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\ValueObjects\UUIDError;

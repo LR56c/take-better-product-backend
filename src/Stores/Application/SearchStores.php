@@ -2,9 +2,9 @@
 
 namespace Src\Stores\Application;
 
+use Src\Stores\Domain\StoreRepository;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
-use Src\Stores\Domain\StoreRepository;
 
 class SearchStores
 {

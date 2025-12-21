@@ -2,12 +2,12 @@
 
 namespace Src\Stores\Application;
 
-use InvalidArgumentException;
-use Src\Shared\Domain\ValueObjects\UUIDError;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
-use Src\Stores\Domain\Exceptions\StoreNotFound;
 use Src\Stores\Domain\Store;
 use Src\Stores\Domain\StoreRepository;
+use Src\Stores\Domain\Exceptions\StoreNotFound;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Src\Shared\Domain\ValueObjects\UUIDError;
+use InvalidArgumentException;
 
 class GetStore
 {

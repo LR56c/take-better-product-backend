@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\SyncProductRequest;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Src\Products\Application\GetProduct;
 use Src\Products\Application\SearchProducts;
 use Src\Products\Application\CreateProduct;
 use Src\Products\Application\UpdateProduct;
+use Src\Products\Application\SyncProduct;
 use Src\Products\Domain\Exceptions\ProductNotFound;
 use Src\Shared\Domain\Criteria\Criteria;
 use InvalidArgumentException;
@@ -28,12 +30,13 @@ class ProductController extends Controller
         private readonly GetProduct $getProduct,
         private readonly SearchProducts $searchProducts,
         private readonly CreateProduct $createProduct,
-        private readonly UpdateProduct $updateProduct
+        private readonly UpdateProduct $updateProduct,
+        private readonly SyncProduct $syncProduct
     ) {}
 
     /**
      * @OA\Get(
-     *      path="/api/products",
+     *      path="/products",
      *      operationId="getProductsList",
      *      tags={"Products"},
      *      summary="Get list of products",
@@ -109,7 +112,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/products/{id}",
+     *      path="/products/{id}",
      *      operationId="getProductById",
      *      tags={"Products"},
      *      summary="Get product information",
@@ -146,11 +149,12 @@ class ProductController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/products",
+     *      path="/products",
      *      operationId="storeProduct",
      *      tags={"Products"},
      *      summary="Store new product",
      *      description="Returns product data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(ref="#/components/schemas/StoreProductRequest")
@@ -174,11 +178,12 @@ class ProductController extends Controller
 
     /**
      * @OA\Put(
-     *      path="/api/products/{id}",
+     *      path="/products/{id}",
      *      operationId="updateProduct",
      *      tags={"Products"},
      *      summary="Update existing product",
      *      description="Returns updated product data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="id",
      *          description="Product id",
@@ -209,6 +214,37 @@ class ProductController extends Controller
             return response()->json(['data' => new ProductResource($product)]);
         } catch (ProductNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);
+        } catch (InvalidArgumentException $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *      path="/products/sync",
+     *      operationId="syncProduct",
+     *      tags={"Products"},
+     *      summary="Sync product (Upsert)",
+     *      description="Creates or updates a product based on store_id and external_id. Records price history if changed.",
+     *      security={{"bearerAuth":{}}},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/SyncProductRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/ProductResource")
+     *      ),
+     *      @OA\Response(response=400, description="Bad Request"),
+     *      @OA\Response(response=422, description="Validation Error")
+     * )
+     */
+    public function sync(SyncProductRequest $request): JsonResponse
+    {
+        try {
+            $product = $this->syncProduct->execute($request->validated());
+            return response()->json(['data' => new ProductResource($product)]);
         } catch (InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

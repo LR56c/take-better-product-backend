@@ -69,13 +69,10 @@ return new class extends Migration {
             $table->foreignUuid('category_id')->nullable()->constrained();
             $table->string('external_id')->index();
             $table->string('url')->unique();
-
             $table->string('title');
             $table->text('description')->nullable();
-
             $table->decimal('price', 12, 0)->index();
             $table->string('currency', 3)->default('CLP');
-
             $table->json('additional_data')->nullable();
             $table->timestamp('last_scraped_at')->useCurrent();
             $table->timestamps();

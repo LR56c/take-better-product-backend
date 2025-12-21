@@ -33,7 +33,7 @@ class CountryController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/countries",
+     *      path="/countries",
      *      operationId="getCountriesList",
      *      tags={"Countries"},
      *      summary="Get list of countries",
@@ -109,7 +109,7 @@ class CountryController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/countries/{id}",
+     *      path="/countries/{id}",
      *      operationId="getCountryById",
      *      tags={"Countries"},
      *      summary="Get country information",
@@ -144,11 +144,12 @@ class CountryController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/countries",
+     *      path="/countries",
      *      operationId="storeCountry",
      *      tags={"Countries"},
      *      summary="Store new country",
      *      description="Returns country data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(ref="#/components/schemas/StoreCountryRequest")
@@ -170,11 +171,12 @@ class CountryController extends Controller
 
     /**
      * @OA\Put(
-     *      path="/api/countries/{id}",
+     *      path="/countries/{id}",
      *      operationId="updateCountry",
      *      tags={"Countries"},
      *      summary="Update existing country",
      *      description="Returns updated country data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="id",
      *          description="Country id",

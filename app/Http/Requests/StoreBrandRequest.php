@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Brand;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBrand extends FormRequest
+class StoreBrandRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,7 +14,7 @@ class UpdateBrand extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
         ];
     }
 }

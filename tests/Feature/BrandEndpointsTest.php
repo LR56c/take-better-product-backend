@@ -3,42 +3,50 @@
 namespace Tests\Feature;
 
 use App\Models\Brand;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Brands\Domain\BrandRepository;
 use Src\Shared\Domain\Criteria\Criteria;
 use Tests\TestCase;
 
-class BrandCursorPaginationTest extends TestCase
+class BrandEndpointsTest extends TestCase
 {
     use RefreshDatabase;
 
     private BrandRepository $repository;
+    private User $adminUser;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->repository = $this->app->make(BrandRepository::class);
+        $this->adminUser = User::factory()->create(['role' => 'admin']);
     }
 
     public function test_it_can_paginate_brands_using_cursor()
     {
+        // Arrange: Create 15 brands
         $brands = Brand::factory()->count(15)->sequence(fn ($sequence) => [
             'created_at' => now()->addMinutes($sequence->index),
         ])->create();
 
         $sortedBrands = $brands->sortByDesc('created_at')->values();
 
+        // Act: Get first page (limit 5)
         $criteriaPage1 = new Criteria(
             limit: 5,
             orderBy: 'created_at',
             orderType: 'DESC'
         );
-        $page1 = $this->repository->search($criteriaPage1);
+        $result1 = $this->repository->search($criteriaPage1);
+        $page1 = $result1->items();
 
+        // Assert Page 1
         $this->assertCount(5, $page1);
         $this->assertEquals($sortedBrands[0]->id, $page1[0]->id);
         $this->assertEquals($sortedBrands[4]->id, $page1[4]->id);
 
+        // Act: Get second page using the last item of page 1 as cursor
         $cursor = $page1->last()->id;
         $criteriaPage2 = new Criteria(
             limit: 5,
@@ -46,13 +54,15 @@ class BrandCursorPaginationTest extends TestCase
             orderType: 'DESC',
             cursor: $cursor
         );
-        $page2 = $this->repository->search($criteriaPage2);
+        $result2 = $this->repository->search($criteriaPage2);
+        $page2 = $result2->items();
 
+        // Assert Page 2
         $this->assertCount(5, $page2);
         $this->assertEquals($sortedBrands[5]->id, $page2[0]->id);
         $this->assertEquals($sortedBrands[9]->id, $page2[4]->id);
 
-
+        // Act: Get third page
         $cursor2 = $page2->last()->id;
         $criteriaPage3 = new Criteria(
             limit: 5,
@@ -60,14 +70,15 @@ class BrandCursorPaginationTest extends TestCase
             orderType: 'DESC',
             cursor: $cursor2
         );
-        $page3 = $this->repository->search($criteriaPage3);
+        $result3 = $this->repository->search($criteriaPage3);
+        $page3 = $result3->items();
 
-
+        // Assert Page 3
         $this->assertCount(5, $page3);
         $this->assertEquals($sortedBrands[10]->id, $page3[0]->id);
         $this->assertEquals($sortedBrands[14]->id, $page3[4]->id);
 
-
+        // Act: Get fourth page (should be empty)
         $cursor3 = $page3->last()->id;
         $criteriaPage4 = new Criteria(
             limit: 5,
@@ -75,32 +86,34 @@ class BrandCursorPaginationTest extends TestCase
             orderType: 'DESC',
             cursor: $cursor3
         );
-        $page4 = $this->repository->search($criteriaPage4);
+        $result4 = $this->repository->search($criteriaPage4);
+        $page4 = $result4->items();
 
         $this->assertCount(0, $page4);
     }
 
     public function test_it_handles_sorting_by_name_with_cursor()
     {
-
+        // Arrange: Create brands with specific names to test alphabetical sorting
         $names = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
         foreach ($names as $name) {
             Brand::factory()->create(['name' => $name]);
         }
 
-
+        // Act: Get first 2 brands ordered by name ASC
         $criteria1 = new Criteria(
             limit: 2,
             orderBy: 'name',
             orderType: 'ASC'
         );
-        $page1 = $this->repository->search($criteria1);
+        $result1 = $this->repository->search($criteria1);
+        $page1 = $result1->items();
 
         $this->assertCount(2, $page1);
         $this->assertEquals('Apple', $page1[0]->name);
         $this->assertEquals('Banana', $page1[1]->name);
 
-
+        // Act: Get next 2 brands
         $cursor = $page1->last()->id;
         $criteria2 = new Criteria(
             limit: 2,
@@ -108,10 +121,37 @@ class BrandCursorPaginationTest extends TestCase
             orderType: 'ASC',
             cursor: $cursor
         );
-        $page2 = $this->repository->search($criteria2);
+        $result2 = $this->repository->search($criteria2);
+        $page2 = $result2->items();
 
         $this->assertCount(2, $page2);
         $this->assertEquals('Cherry', $page2[0]->name);
         $this->assertEquals('Date', $page2[1]->name);
+    }
+
+    public function test_admin_can_create_brand()
+    {
+        $data = ['name' => 'New Brand'];
+
+        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
+                         ->postJson('/api/brands', $data);
+
+        $response->assertStatus(201)
+                 ->assertJsonPath('data.name', 'New Brand');
+
+        $this->assertDatabaseHas('brands', ['name' => 'New Brand']);
+    }
+
+    public function test_admin_can_update_brand()
+    {
+        $brand = Brand::factory()->create(['name' => 'Old Name']);
+
+        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
+                         ->putJson("/api/brands/{$brand->id}", ['name' => 'Updated Name']);
+
+        $response->assertStatus(200)
+                 ->assertJsonPath('data.name', 'Updated Name');
+
+        $this->assertDatabaseHas('brands', ['name' => 'Updated Name']);
     }
 }

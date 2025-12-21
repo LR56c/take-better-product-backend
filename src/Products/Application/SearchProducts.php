@@ -2,7 +2,7 @@
 
 namespace Src\Products\Application;
 
-use Src\Products\Domain\Contracts\ProductRepository;
+use Src\Products\Domain\ProductRepository;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
 

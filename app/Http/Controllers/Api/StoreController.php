@@ -35,7 +35,7 @@ class StoreController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/stores",
+     *      path="/stores",
      *      operationId="getStoresList",
      *      tags={"Stores"},
      *      summary="Get list of stores",
@@ -111,7 +111,7 @@ class StoreController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/stores/{id}",
+     *      path="/stores/{id}",
      *      operationId="getStoreById",
      *      tags={"Stores"},
      *      summary="Get store information",
@@ -146,11 +146,12 @@ class StoreController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/stores",
+     *      path="/stores",
      *      operationId="storeStore",
      *      tags={"Stores"},
      *      summary="Store new store",
      *      description="Returns store data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(ref="#/components/schemas/StoreStoreRequest")
@@ -172,11 +173,12 @@ class StoreController extends Controller
 
     /**
      * @OA\Put(
-     *      path="/api/stores/{id}",
+     *      path="/stores/{id}",
      *      operationId="updateStore",
      *      tags={"Stores"},
      *      summary="Update existing store",
      *      description="Returns updated store data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="id",
      *          description="Store id",
@@ -212,11 +214,12 @@ class StoreController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/stores/{id}/categories",
+     *      path="/stores/{id}/categories",
      *      operationId="syncStoreCategories",
      *      tags={"Stores"},
      *      summary="Sync store categories",
      *      description="Syncs categories for a store",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="id",
      *          description="Store id",

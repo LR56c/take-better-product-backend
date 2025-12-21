@@ -17,15 +17,6 @@ use Src\Shared\Domain\Criteria\Criteria;
 use InvalidArgumentException;
 
 /**
- * @OA\Info(
- *      version="1.0.0",
- *      title="Take Better Product API",
- *      description="API documentation for Take Better Product Backend",
- *      @OA\Contact(
- *          email="admin@takebetterproduct.com"
- *      )
- * )
- *
  * @OA\Tag(
  *     name="Brands",
  *     description="API Endpoints of Brands"
@@ -42,7 +33,7 @@ class BrandController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/brands",
+     *      path="/brands",
      *      operationId="getBrandsList",
      *      tags={"Brands"},
      *      summary="Get list of brands",
@@ -118,7 +109,7 @@ class BrandController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/brands/{id}",
+     *      path="/brands/{id}",
      *      operationId="getBrandById",
      *      tags={"Brands"},
      *      summary="Get brand information",
@@ -153,11 +144,12 @@ class BrandController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/brands",
+     *      path="/brands",
      *      operationId="storeBrand",
      *      tags={"Brands"},
      *      summary="Store new brand",
      *      description="Returns brand data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(ref="#/components/schemas/StoreBrandRequest")
@@ -180,11 +172,12 @@ class BrandController extends Controller
 
     /**
      * @OA\Put(
-     *      path="/api/brands/{id}",
+     *      path="/brands/{id}",
      *      operationId="updateBrand",
      *      tags={"Brands"},
      *      summary="Update existing brand",
      *      description="Returns updated brand data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="id",
      *          description="Brand id",

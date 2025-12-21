@@ -2,13 +2,13 @@
 
 namespace Src\Categories\Infrastructure;
 
-use Illuminate\Database\Eloquent\Builder;
-use Src\Categories\Domain\Category;
 use Src\Categories\Domain\CategoryRepository;
+use Src\Categories\Domain\Category;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class EloquentCategoryRepository implements CategoryRepository
 {

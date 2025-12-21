@@ -51,9 +51,9 @@ class EloquentBrandRepository implements BrandRepository
     {
         foreach ($filters as $field => $value) {
             if (is_array($value)) {
-                $query->whereIn($field, $value);
+                 $query->whereIn($field, $value);
             } else {
-                $query->where($field, $value);
+                 $query->where($field, $value);
             }
         }
     }

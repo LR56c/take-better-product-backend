@@ -2,7 +2,7 @@
 
 namespace Src\Products\Infrastructure;
 
-use Src\Products\Domain\Contracts\ProductRepository;
+use Src\Products\Domain\ProductRepository;
 use Src\Products\Domain\Product;
 use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\Criteria\Criteria;
@@ -15,6 +15,13 @@ class EloquentProductRepository implements ProductRepository
     public function find(ValidUUID $id): ?Product
     {
         return Product::find($id->value());
+    }
+
+    public function findByExternalId(ValidUUID $storeId, string $externalId): ?Product
+    {
+        return Product::where('store_id', $storeId->value())
+                      ->where('external_id', $externalId)
+                      ->first();
     }
 
     public function search(Criteria $criteria): SearchResult

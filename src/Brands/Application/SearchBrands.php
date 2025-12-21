@@ -2,7 +2,7 @@
 
 namespace Src\Brands\Application;
 
-use Src\Brands\Domain\Contracts\BrandRepository;
+use Src\Brands\Domain\BrandRepository;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
 

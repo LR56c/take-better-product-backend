@@ -2,7 +2,7 @@
 
 namespace Src\Stores\Application;
 
-use Src\Stores\Domain\Contracts\StoreRepository;
+use Src\Stores\Domain\StoreRepository;
 use Src\Stores\Domain\Exceptions\StoreNotFound;
 use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\ValueObjects\UUIDError;

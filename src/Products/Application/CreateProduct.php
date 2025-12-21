@@ -4,7 +4,7 @@ namespace Src\Products\Application;
 
 use Illuminate\Support\Facades\DB;
 use Src\Products\Domain\Product;
-use Src\Products\Domain\Contracts\ProductRepository;
+use Src\Products\Domain\ProductRepository;
 
 class CreateProduct
 {

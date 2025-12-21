@@ -2,13 +2,19 @@
 
 namespace Src\Stores\Domain;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Src\Categories\Domain\Category;
 
-class StoreCategory extends Model
+class StoreCategory extends Pivot
 {
     use HasUuids;
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = true; // Required for Pivot models with UUIDs
 
     protected $table = 'store_categories';
 
@@ -22,14 +28,4 @@ class StoreCategory extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
-
-    public function store()
-    {
-        return $this->belongsTo(Store::class);
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
 }

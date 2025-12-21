@@ -2,13 +2,13 @@
 
 namespace Src\Countries\Infrastructure;
 
-use Illuminate\Database\Eloquent\Builder;
-use Src\Countries\Domain\Country;
 use Src\Countries\Domain\CountryRepository;
+use Src\Countries\Domain\Country;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class EloquentCountryRepository implements CountryRepository
 {

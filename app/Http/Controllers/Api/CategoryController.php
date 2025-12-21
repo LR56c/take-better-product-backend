@@ -33,7 +33,7 @@ class CategoryController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/categories",
+     *      path="/categories",
      *      operationId="getCategoriesList",
      *      tags={"Categories"},
      *      summary="Get list of categories",
@@ -109,7 +109,7 @@ class CategoryController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/categories/{id}",
+     *      path="/categories/{id}",
      *      operationId="getCategoryById",
      *      tags={"Categories"},
      *      summary="Get category information",
@@ -144,11 +144,12 @@ class CategoryController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/categories",
+     *      path="/categories",
      *      operationId="storeCategory",
      *      tags={"Categories"},
      *      summary="Store new category",
      *      description="Returns category data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(ref="#/components/schemas/StoreCategoryRequest")
@@ -170,11 +171,12 @@ class CategoryController extends Controller
 
     /**
      * @OA\Put(
-     *      path="/api/categories/{id}",
+     *      path="/categories/{id}",
      *      operationId="updateCategory",
      *      tags={"Categories"},
      *      summary="Update existing category",
      *      description="Returns updated category data",
+     *      security={{"bearerAuth":{}}},
      *      @OA\Parameter(
      *          name="id",
      *          description="Category id",
