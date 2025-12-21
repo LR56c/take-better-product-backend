@@ -17,6 +17,10 @@ use Src\Stores\Domain\StoreRepository;
 use Src\Stores\Infrastructure\EloquentStoreRepository;
 use Src\Users\Domain\UserRepository;
 use Src\Users\Infrastructure\EloquentUserRepository;
+use Src\Products\Domain\ProductAiRepository;
+use Src\Products\Infrastructure\GeminiProductAiRepository;
+use Src\Products\Domain\ProductEmbeddingRepository;
+use Src\Products\Infrastructure\EloquentProductEmbeddingRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(StoreRepository::class, EloquentStoreRepository::class);
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
         $this->app->bind(AuthRepository::class, SupabaseAuthRepository::class);
+        $this->app->bind(ProductAiRepository::class, GeminiProductAiRepository::class);
+        $this->app->bind(ProductEmbeddingRepository::class, EloquentProductEmbeddingRepository::class);
     }
 
     /**

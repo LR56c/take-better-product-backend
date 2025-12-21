@@ -7,58 +7,62 @@ use Src\Products\Domain\Product;
 use Src\Products\Domain\ProductRepository;
 use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\ValueObjects\UUIDError;
+use Src\Products\Domain\ProductAiRepository;
+use Src\Products\Domain\ProductEmbedding;
+use Src\Products\Domain\ProductEmbeddingRepository;
 use InvalidArgumentException;
 
 class SyncProduct
 {
     public function __construct(
-        private readonly ProductRepository $repository
+        private readonly ProductRepository $repository,
+        private readonly ProductAiRepository $aiRepository,
+        private readonly ProductEmbeddingRepository $embeddingRepository
     ) {}
 
     public function execute(array $data): Product
     {
-        // Validate Store ID
         $storeId = ValidUUID::from($data['store_id']);
         if ($storeId instanceof UUIDError) {
             throw new InvalidArgumentException(sprintf('The store id <%s> is invalid', $data['store_id']));
         }
 
-        // Try to find existing product
         $existingProduct = $this->repository->findByExternalId($storeId, $data['external_id']);
 
         return DB::transaction(function () use ($existingProduct, $data) {
             $product = $existingProduct ?? new Product();
 
-            // Extract relations
             $images = $data['images'] ?? [];
             $newPrice = (float) $data['price'];
 
-            // Logic for Price History
-            $shouldRecordHistory = false;
-            if (!$existingProduct) {
-                // New product: always record initial price
-                $shouldRecordHistory = true;
-            } elseif (abs((float)$product->price - $newPrice) > 0.001) { // Float comparison
-                // Existing product: record only if price changed
-                $shouldRecordHistory = true;
-            }
+            $shouldRecordHistory = !$existingProduct || (abs((float)$product->price - $newPrice) > 0.001);
 
-            // Clean data
             unset($data['images']);
 
-            // Fill/Update attributes
             $product->fill($data);
-            $product->last_scraped_at = now(); // Always update scraped timestamp
+            $product->last_scraped_at = now();
 
             $this->repository->save($product);
 
-            // Handle Images (Full Sync)
-            if (!empty($images)) {
-                $product->images()->delete(); // Remove old images
-                $product->images()->createMany($images);
+            // Generate embedding only for new products
+            if (!$existingProduct) {
+                $embeddingText = $product->title . ' ' . ($product->description ?? '');
+                $vector = $this->aiRepository->generateEmbedding($embeddingText);
+
+                if ($vector) {
+                    $embedding = new ProductEmbedding([
+                        'product_id' => $product->id,
+                        'vector' => $vector
+                    ]);
+                    $this->embeddingRepository->save($embedding);
+                }
             }
 
-            // Handle Price History
+            $product->images()->delete();
+            if (!empty($images)) {
+                $this->saveImages($product, $images);
+            }
+
             if ($shouldRecordHistory) {
                 $product->priceHistories()->create([
                     'price' => $newPrice,
@@ -66,7 +70,24 @@ class SyncProduct
                 ]);
             }
 
-            return $product->load(['store', 'brand', 'category', 'images']);
+            return $product->load(['store', 'brand', 'category', 'images', 'embedding']);
         });
+    }
+
+    private function saveImages(Product $product, array $images): void
+    {
+        $hasMain = false;
+        foreach ($images as $image) {
+            if (!empty($image['main'])) {
+                $hasMain = true;
+                break;
+            }
+        }
+
+        if (!$hasMain && count($images) > 0) {
+            $images[0]['main'] = true;
+        }
+
+        $product->images()->createMany($images);
     }
 }

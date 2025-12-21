@@ -11,6 +11,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // We only create the extension if the driver is pgsql
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement('CREATE EXTENSION IF NOT EXISTS vector');
+        }
 
         Schema::create('countries', function (Blueprint $table) {
             $table->uuid('id')->primary();
@@ -69,10 +73,13 @@ return new class extends Migration {
             $table->foreignUuid('category_id')->nullable()->constrained();
             $table->string('external_id')->index();
             $table->string('url')->unique();
+
             $table->string('title');
             $table->text('description')->nullable();
+
             $table->decimal('price', 12, 0)->index();
             $table->string('currency', 3)->default('CLP');
+
             $table->json('additional_data')->nullable();
             $table->timestamp('last_scraped_at')->useCurrent();
             $table->timestamps();
@@ -92,6 +99,12 @@ return new class extends Migration {
             $table->foreignUuid('product_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
+
+
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE product_embeddings ADD COLUMN vector vector(768)');
+            DB::statement('CREATE INDEX product_embedding_idx ON product_embeddings USING hnsw (vector vector_cosine_ops)');
+        }
 
 
         Schema::create('price_histories', function (Blueprint $table) {

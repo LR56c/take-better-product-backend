@@ -5,11 +5,16 @@ namespace Src\Products\Application;
 use Illuminate\Support\Facades\DB;
 use Src\Products\Domain\Product;
 use Src\Products\Domain\ProductRepository;
+use Src\Products\Domain\ProductAiRepository;
+use Src\Products\Domain\ProductEmbedding;
+use Src\Products\Domain\ProductEmbeddingRepository;
 
 class CreateProduct
 {
     public function __construct(
-        private readonly ProductRepository $repository
+        private readonly ProductRepository $repository,
+        private readonly ProductAiRepository $aiRepository,
+        private readonly ProductEmbeddingRepository $embeddingRepository
     ) {}
 
     public function execute(array $data): Product
@@ -17,28 +22,53 @@ class CreateProduct
         return DB::transaction(function () use ($data) {
             $product = new Product();
 
-            // Extract relations data
             $images = $data['images'] ?? [];
             $price = $data['price'];
 
-            // Clean data for product model
             unset($data['images']);
 
             $product->fill($data);
             $this->repository->save($product);
 
-            // Handle Images
-            if (!empty($images)) {
-                $product->images()->createMany($images);
+            // Generate and save embedding
+            $embeddingText = $product->title . ' ' . ($product->description ?? '');
+            $vector = $this->aiRepository->generateEmbedding($embeddingText);
+
+            if ($vector) {
+                $embedding = new ProductEmbedding([
+                    'product_id' => $product->id,
+                    'vector' => $vector
+                ]);
+                $this->embeddingRepository->save($embedding);
             }
 
-            // Handle Initial Price History
+            if (!empty($images)) {
+                $this->saveImages($product, $images);
+            }
+
             $product->priceHistories()->create([
                 'price' => $price,
                 'recorded_at' => now(),
             ]);
 
-            return $product->load(['images', 'priceHistories']);
+            return $product->load(['images', 'priceHistories', 'embedding']);
         });
+    }
+
+    private function saveImages(Product $product, array $images): void
+    {
+        $hasMain = false;
+        foreach ($images as $image) {
+            if (!empty($image['main'])) {
+                $hasMain = true;
+                break;
+            }
+        }
+
+        if (!$hasMain && count($images) > 0) {
+            $images[0]['main'] = true;
+        }
+
+        $product->images()->createMany($images);
     }
 }
