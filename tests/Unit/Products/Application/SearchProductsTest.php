@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Products\Application;
 
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Products\Application\SearchProducts;
 use Src\Shared\Domain\Criteria\Criteria;
-use App\Models\Product;
 use Tests\TestCase;
 
 class SearchProductsTest extends TestCase

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Country;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -28,7 +27,7 @@ class CountryEndpointsTest extends TestCase
         ];
 
         $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-                         ->postJson('/api/countries', $data);
+            ->postJson('/api/countries', $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('countries', ['code' => 'CHL']);

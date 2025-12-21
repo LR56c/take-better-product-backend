@@ -2,13 +2,13 @@
 
 namespace Src\Categories\Infrastructure;
 
-use Src\Categories\Domain\CategoryRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Src\Categories\Domain\Category;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Src\Categories\Domain\CategoryRepository;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
-use Illuminate\Database\Eloquent\Builder;
 
 class EloquentCategoryRepository implements CategoryRepository
 {
@@ -51,9 +51,9 @@ class EloquentCategoryRepository implements CategoryRepository
     {
         foreach ($filters as $field => $value) {
             if (is_array($value)) {
-                 $query->whereIn($field, $value);
+                $query->whereIn($field, $value);
             } else {
-                 $query->where($field, $value);
+                $query->where($field, $value);
             }
         }
     }

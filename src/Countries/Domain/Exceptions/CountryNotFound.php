@@ -2,8 +2,8 @@
 
 namespace Src\Countries\Domain\Exceptions;
 
-use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\Exceptions\DomainError;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 
 class CountryNotFound extends DomainError
 {

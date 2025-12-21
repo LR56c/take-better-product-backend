@@ -15,7 +15,7 @@ class UpdateCountryRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'code' => ['sometimes', 'string', 'size:3', 'unique:countries,code,' . $this->route('id')],
+            'code' => ['sometimes', 'string', 'size:3', 'unique:countries,code,'.$this->route('id')],
             'currency' => ['sometimes', 'string', 'size:3'],
         ];
     }

@@ -28,7 +28,7 @@ class EloquentProductEmbeddingRepository implements ProductEmbeddingRepository
 
         $results = DB::select($query);
 
-        return array_map(fn($row) => [
+        return array_map(fn ($row) => [
             'product_id' => $row->product_id,
             'similarity' => (float) $row->similarity,
         ], $results);

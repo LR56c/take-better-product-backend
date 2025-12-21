@@ -4,9 +4,9 @@ namespace Src\Products\Application;
 
 use Illuminate\Support\Facades\DB;
 use Src\Products\Domain\Product;
-use Src\Products\Domain\ProductRepository;
 use Src\Products\Domain\ProductEmbedding;
 use Src\Products\Domain\ProductEmbeddingRepository;
+use Src\Products\Domain\ProductRepository;
 
 class CreateProduct
 {
@@ -19,7 +19,7 @@ class CreateProduct
     public function execute(array $data): Product
     {
         return DB::transaction(function () use ($data) {
-            $product = new Product();
+            $product = new Product;
 
             $images = $data['images'] ?? [];
             $price = $data['price'];
@@ -30,18 +30,18 @@ class CreateProduct
             $this->repository->save($product);
 
             // Generate and save embedding
-            $embeddingText = $product->title . ' ' . ($product->description ?? '');
+            $embeddingText = $product->title.' '.($product->description ?? '');
             $vector = $this->generateEmbedding->execute($embeddingText);
 
             if ($vector) {
                 $embedding = new ProductEmbedding([
                     'product_id' => $product->id,
-                    'vector' => $vector
+                    'vector' => $vector,
                 ]);
                 $this->embeddingRepository->save($embedding);
             }
 
-            if (!empty($images)) {
+            if (! empty($images)) {
                 $this->saveImages($product, $images);
             }
 
@@ -58,13 +58,13 @@ class CreateProduct
     {
         $hasMain = false;
         foreach ($images as $image) {
-            if (!empty($image['main'])) {
+            if (! empty($image['main'])) {
                 $hasMain = true;
                 break;
             }
         }
 
-        if (!$hasMain && count($images) > 0) {
+        if (! $hasMain && count($images) > 0) {
             $images[0]['main'] = true;
         }
 

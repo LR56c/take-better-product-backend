@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Countries\Application;
 
+use App\Models\Country;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Countries\Application\GetCountry;
 use Src\Countries\Domain\Exceptions\CountryNotFound;
-use App\Models\Country;
 use Tests\TestCase;
 
 class GetCountryTest extends TestCase

@@ -13,7 +13,7 @@ class CreateCountry
 
     public function execute(array $data): Country
     {
-        $country = new Country();
+        $country = new Country;
         $country->fill($data);
 
         $this->repository->save($country);

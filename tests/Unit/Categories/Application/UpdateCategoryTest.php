@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Categories\Application;
 
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Categories\Application\UpdateCategory;
-use App\Models\Category;
 use Tests\TestCase;
 
 class UpdateCategoryTest extends TestCase

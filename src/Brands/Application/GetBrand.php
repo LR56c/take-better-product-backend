@@ -2,12 +2,12 @@
 
 namespace Src\Brands\Application;
 
+use InvalidArgumentException;
 use Src\Brands\Domain\Brand;
 use Src\Brands\Domain\BrandRepository;
 use Src\Brands\Domain\Exceptions\BrandNotFound;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\ValueObjects\UUIDError;
-use InvalidArgumentException;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 
 class GetBrand
 {
@@ -25,7 +25,7 @@ class GetBrand
 
         $brand = $this->repository->find($brandId);
 
-        if (null === $brand) {
+        if ($brand === null) {
             throw new BrandNotFound($brandId);
         }
 

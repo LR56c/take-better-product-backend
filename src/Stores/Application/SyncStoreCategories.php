@@ -2,11 +2,11 @@
 
 namespace Src\Stores\Application;
 
-use Src\Stores\Domain\StoreRepository;
-use Src\Stores\Domain\Exceptions\StoreNotFound;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
-use Src\Shared\Domain\ValueObjects\UUIDError;
 use InvalidArgumentException;
+use Src\Shared\Domain\ValueObjects\UUIDError;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Src\Stores\Domain\Exceptions\StoreNotFound;
+use Src\Stores\Domain\StoreRepository;
 
 class SyncStoreCategories
 {
@@ -15,8 +15,7 @@ class SyncStoreCategories
     ) {}
 
     /**
-     * @param string $storeId
-     * @param array $categoriesData Example: [['category_id' => 'uuid', 'url' => 'http...', 'is_active' => true]]
+     * @param  array  $categoriesData  Example: [['category_id' => 'uuid', 'url' => 'http...', 'is_active' => true]]
      */
     public function execute(string $storeId, array $categoriesData): void
     {
@@ -28,7 +27,7 @@ class SyncStoreCategories
 
         $store = $this->repository->find($id);
 
-        if (null === $store) {
+        if ($store === null) {
             throw new StoreNotFound($id);
         }
 

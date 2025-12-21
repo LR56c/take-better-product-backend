@@ -11,5 +11,5 @@ use Src\Users\Domain\User as DomainUser;
 
 class User extends DomainUser implements AuthenticatableContract, AuthorizableContract
 {
-    use HasFactory, Authenticatable, Authorizable;
+    use Authenticatable, Authorizable, HasFactory;
 }

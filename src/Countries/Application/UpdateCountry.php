@@ -25,11 +25,11 @@ class UpdateCountry
 
         $country = $this->repository->find($countryId);
 
-        if (null === $country) {
+        if ($country === null) {
             throw new CountryNotFound($countryId);
         }
 
-        $data = array_filter($data, fn($value) => $value !== null);
+        $data = array_filter($data, fn ($value) => $value !== null);
         $country->fill($data);
 
         $this->repository->save($country);

@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Products\Application;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
-use Src\Products\Application\SearchSimilarProducts;
-use Src\Products\Application\GenerateEmbedding;
-use Src\Products\Domain\ProductRepository;
-use Src\Products\Domain\ProductEmbeddingRepository;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
+use Src\Products\Application\GenerateEmbedding;
+use Src\Products\Application\SearchSimilarProducts;
+use Src\Products\Domain\ProductEmbeddingRepository;
+use Src\Products\Domain\ProductRepository;
 use Tests\TestCase;
 
 class SearchSimilarProductsTest extends TestCase

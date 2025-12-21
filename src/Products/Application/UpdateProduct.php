@@ -3,12 +3,12 @@
 namespace Src\Products\Application;
 
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
+use Src\Products\Domain\Exceptions\ProductNotFound;
 use Src\Products\Domain\Product;
 use Src\Products\Domain\ProductRepository;
-use Src\Products\Domain\Exceptions\ProductNotFound;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\ValueObjects\UUIDError;
-use InvalidArgumentException;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 
 class UpdateProduct
 {
@@ -26,13 +26,13 @@ class UpdateProduct
 
         $product = $this->repository->find($productId);
 
-        if (null === $product) {
+        if ($product === null) {
             throw new ProductNotFound($productId);
         }
 
         return DB::transaction(function () use ($product, $data) {
             // Check if price changed to record history
-            if (isset($data['price']) && (float)$data['price'] !== (float)$product->price) {
+            if (isset($data['price']) && (float) $data['price'] !== (float) $product->price) {
                 $product->priceHistories()->create([
                     'price' => $data['price'],
                     'recorded_at' => now(),
@@ -47,7 +47,7 @@ class UpdateProduct
             }
 
             // Filter nulls and update product
-            $data = array_filter($data, fn($value) => $value !== null);
+            $data = array_filter($data, fn ($value) => $value !== null);
             // Remove relations from data array before filling product
             unset($data['images']);
 

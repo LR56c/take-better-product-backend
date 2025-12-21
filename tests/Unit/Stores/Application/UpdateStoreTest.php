@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Stores\Application;
 
+use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Stores\Application\UpdateStore;
-use App\Models\Store;
 use Tests\TestCase;
 
 class UpdateStoreTest extends TestCase

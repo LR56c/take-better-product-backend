@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     private string $apiKey;
+
     private string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent';
 
     public function __construct()
@@ -19,6 +20,7 @@ class GeminiService
     {
         if (empty($this->apiKey)) {
             Log::warning('Gemini API Key not configured');
+
             return null;
         }
 
@@ -26,21 +28,24 @@ class GeminiService
             $response = Http::post("{$this->baseUrl}?key={$this->apiKey}", [
                 'content' => [
                     'parts' => [
-                        ['text' => $text]
-                    ]
-                ]
+                        ['text' => $text],
+                    ],
+                ],
             ]);
 
             if ($response->failed()) {
                 Log::error('Gemini API Error', ['body' => $response->body()]);
+
                 return null;
             }
 
             $data = $response->json();
+
             return $data['embedding']['values'] ?? null;
 
         } catch (\Exception $e) {
             Log::error('Gemini Connection Error', ['error' => $e->getMessage()]);
+
             return null;
         }
     }

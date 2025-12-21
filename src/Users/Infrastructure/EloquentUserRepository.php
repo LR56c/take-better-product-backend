@@ -2,13 +2,13 @@
 
 namespace Src\Users\Infrastructure;
 
-use Src\Users\Domain\User;
-use Src\Users\Domain\UserRepository;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Illuminate\Database\Eloquent\Builder;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
-use Illuminate\Database\Eloquent\Builder;
+use Src\Users\Domain\User;
+use Src\Users\Domain\UserRepository;
 
 class EloquentUserRepository implements UserRepository
 {
@@ -46,9 +46,9 @@ class EloquentUserRepository implements UserRepository
     {
         foreach ($filters as $field => $value) {
             if (is_array($value)) {
-                 $query->whereIn($field, $value);
+                $query->whereIn($field, $value);
             } else {
-                 $query->where($field, $value);
+                $query->where($field, $value);
             }
         }
     }

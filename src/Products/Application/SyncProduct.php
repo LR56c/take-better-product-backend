@@ -3,13 +3,13 @@
 namespace Src\Products\Application;
 
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 use Src\Products\Domain\Product;
-use Src\Products\Domain\ProductRepository;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
-use Src\Shared\Domain\ValueObjects\UUIDError;
 use Src\Products\Domain\ProductEmbedding;
 use Src\Products\Domain\ProductEmbeddingRepository;
-use InvalidArgumentException;
+use Src\Products\Domain\ProductRepository;
+use Src\Shared\Domain\ValueObjects\UUIDError;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 
 class SyncProduct
 {
@@ -29,12 +29,12 @@ class SyncProduct
         $existingProduct = $this->repository->findByExternalId($storeId, $data['external_id']);
 
         return DB::transaction(function () use ($existingProduct, $data) {
-            $product = $existingProduct ?? new Product();
+            $product = $existingProduct ?? new Product;
 
             $images = $data['images'] ?? [];
             $newPrice = (float) $data['price'];
 
-            $shouldRecordHistory = !$existingProduct || (abs((float)$product->price - $newPrice) > 0.001);
+            $shouldRecordHistory = ! $existingProduct || (abs((float) $product->price - $newPrice) > 0.001);
 
             unset($data['images']);
 
@@ -44,21 +44,21 @@ class SyncProduct
             $this->repository->save($product);
 
             // Generate embedding only for new products
-            if (!$existingProduct) {
-                $embeddingText = $product->title . ' ' . ($product->description ?? '');
+            if (! $existingProduct) {
+                $embeddingText = $product->title.' '.($product->description ?? '');
                 $vector = $this->generateEmbedding->execute($embeddingText);
 
                 if ($vector) {
                     $embedding = new ProductEmbedding([
                         'product_id' => $product->id,
-                        'vector' => $vector
+                        'vector' => $vector,
                     ]);
                     $this->embeddingRepository->save($embedding);
                 }
             }
 
             $product->images()->delete();
-            if (!empty($images)) {
+            if (! empty($images)) {
                 $this->saveImages($product, $images);
             }
 
@@ -77,13 +77,13 @@ class SyncProduct
     {
         $hasMain = false;
         foreach ($images as $image) {
-            if (!empty($image['main'])) {
+            if (! empty($image['main'])) {
                 $hasMain = true;
                 break;
             }
         }
 
-        if (!$hasMain && count($images) > 0) {
+        if (! $hasMain && count($images) > 0) {
             $images[0]['main'] = true;
         }
 

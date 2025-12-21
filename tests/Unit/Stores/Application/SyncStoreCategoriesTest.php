@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Stores\Application;
 
+use App\Models\Category;
+use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Stores\Application\SyncStoreCategories;
-use App\Models\Store;
-use App\Models\Category;
 use Tests\TestCase;
 
 class SyncStoreCategoriesTest extends TestCase

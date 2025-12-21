@@ -2,10 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -54,7 +55,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-
         Schema::create('store_categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('store_id')->constrained()->cascadeOnDelete();
@@ -64,7 +64,6 @@ return new class extends Migration {
             $table->index(['store_id', 'category_id']);
             $table->timestamps();
         });
-
 
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
@@ -93,19 +92,16 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-
         Schema::create('product_embeddings', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('product_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
-
         if (DB::connection()->getDriverName() === 'pgsql') {
             DB::statement('ALTER TABLE product_embeddings ADD COLUMN vector vector(768)');
             DB::statement('CREATE INDEX product_embedding_idx ON product_embeddings USING hnsw (vector vector_cosine_ops)');
         }
-
 
         Schema::create('price_histories', function (Blueprint $table) {
             $table->uuid('id')->primary();

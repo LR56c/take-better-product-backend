@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Brands\Application;
 
+use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Brands\Application\SearchBrands;
 use Src\Shared\Domain\Criteria\Criteria;
-use App\Models\Brand;
 use Tests\TestCase;
 
 class SearchBrandsTest extends TestCase

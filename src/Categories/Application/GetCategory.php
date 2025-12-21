@@ -25,7 +25,7 @@ class GetCategory
 
         $category = $this->repository->find($categoryId);
 
-        if (null === $category) {
+        if ($category === null) {
             throw new CategoryNotFound($categoryId);
         }
 

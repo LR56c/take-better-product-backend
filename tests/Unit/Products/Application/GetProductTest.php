@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Products\Application;
 
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Products\Application\GetProduct;
 use Src\Products\Domain\Exceptions\ProductNotFound;
-use App\Models\Product;
 use Tests\TestCase;
 
 class GetProductTest extends TestCase

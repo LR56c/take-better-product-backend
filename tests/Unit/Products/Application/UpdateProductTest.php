@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Products\Application;
 
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Products\Application\UpdateProduct;
-use App\Models\Product;
 use Tests\TestCase;
 
 class UpdateProductTest extends TestCase

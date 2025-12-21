@@ -21,6 +21,7 @@ class SupabaseAuthRepository implements AuthRepository
     {
         $auth = $this->supabase->createAuth();
         $auth->signInWithEmailAndPassword($email, $password);
+
         return (array) $auth->data();
     }
 
@@ -28,6 +29,7 @@ class SupabaseAuthRepository implements AuthRepository
     {
         $auth = $this->supabase->createAuth();
         $auth->createUserWithEmailAndPassword($email, $password);
+
         return (array) $auth->data();
     }
 
@@ -40,6 +42,7 @@ class SupabaseAuthRepository implements AuthRepository
         $metaData = $attributes['data'] ?? [];
 
         $auth->updateUser($jwt, $email, $password, $metaData);
+
         return (array) $auth->data();
     }
 }

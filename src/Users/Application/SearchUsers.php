@@ -2,9 +2,9 @@
 
 namespace Src\Users\Application;
 
-use Src\Users\Domain\UserRepository;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
+use Src\Users\Domain\UserRepository;
 
 class SearchUsers
 {

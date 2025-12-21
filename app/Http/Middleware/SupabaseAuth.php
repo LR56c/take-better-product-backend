@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class SupabaseAuth
@@ -16,14 +16,14 @@ class SupabaseAuth
     {
         $token = $request->bearerToken();
 
-        if (!$token) {
+        if (! $token) {
             return response()->json(['error' => 'Token not provided'], 401);
         }
 
         try {
             $secret = config('services.supabase.jwt_secret');
 
-            if (!$secret) {
+            if (! $secret) {
                 throw new \Exception('Supabase JWT Secret not configured');
             }
 
@@ -33,7 +33,7 @@ class SupabaseAuth
 
             $user = User::find($userId);
 
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'User not found or not synced'], 401);
             }
 
@@ -43,7 +43,7 @@ class SupabaseAuth
             Auth::login($user);
 
         } catch (\Throwable $e) {
-            return response()->json(['error' => 'Invalid token: ' . $e->getMessage()], 401);
+            return response()->json(['error' => 'Invalid token: '.$e->getMessage()], 401);
         }
 
         return $next($request);

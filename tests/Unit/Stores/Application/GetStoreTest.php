@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Stores\Application;
 
+use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Stores\Application\GetStore;
 use Src\Stores\Domain\Exceptions\StoreNotFound;
-use App\Models\Store;
 use Tests\TestCase;
 
 class GetStoreTest extends TestCase

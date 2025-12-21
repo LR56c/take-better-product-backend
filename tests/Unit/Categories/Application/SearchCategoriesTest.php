@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Categories\Application;
 
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Categories\Application\SearchCategories;
 use Src\Shared\Domain\Criteria\Criteria;
-use App\Models\Category;
 use Tests\TestCase;
 
 class SearchCategoriesTest extends TestCase

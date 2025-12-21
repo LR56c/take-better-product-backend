@@ -2,8 +2,8 @@
 
 namespace Src\Users\Domain\Exceptions;
 
-use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\Exceptions\DomainError;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 
 class UserNotFound extends DomainError
 {

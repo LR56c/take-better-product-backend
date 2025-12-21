@@ -25,11 +25,11 @@ class UpdateCategory
 
         $category = $this->repository->find($categoryId);
 
-        if (null === $category) {
+        if ($category === null) {
             throw new CategoryNotFound($categoryId);
         }
 
-        $data = array_filter($data, fn($value) => $value !== null);
+        $data = array_filter($data, fn ($value) => $value !== null);
         $category->fill($data);
 
         $this->repository->save($category);

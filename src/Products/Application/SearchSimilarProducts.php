@@ -3,8 +3,8 @@
 namespace Src\Products\Application;
 
 use Illuminate\Database\Eloquent\Collection;
-use Src\Products\Domain\ProductRepository;
 use Src\Products\Domain\ProductEmbeddingRepository;
+use Src\Products\Domain\ProductRepository;
 use Src\Shared\Domain\SearchResult;
 
 class SearchSimilarProducts
@@ -19,15 +19,15 @@ class SearchSimilarProducts
     {
         $vector = $this->generateEmbedding->execute($queryText);
 
-        if (!$vector) {
-            return new SearchResult(new Collection(), 0);
+        if (! $vector) {
+            return new SearchResult(new Collection, 0);
         }
 
         // Get similar products IDs
         $similarResults = $this->embeddingRepository->searchSimilar($vector, $limit);
 
         if (empty($similarResults)) {
-            return new SearchResult(new Collection(), 0);
+            return new SearchResult(new Collection, 0);
         }
 
         $productIds = array_column($similarResults, 'product_id');

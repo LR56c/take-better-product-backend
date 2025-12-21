@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Categories\Application;
 
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Categories\Application\GetCategory;
 use Src\Categories\Domain\Exceptions\CategoryNotFound;
-use App\Models\Category;
 use Tests\TestCase;
 
 class GetCategoryTest extends TestCase

@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Products\Application;
 
+use Illuminate\Support\Facades\Log;
 use Mockery;
 use Src\Products\Application\GenerateEmbedding;
 use Src\Products\Domain\ProductAiRepository;
-use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class GenerateEmbeddingTest extends TestCase
@@ -24,7 +24,7 @@ class GenerateEmbeddingTest extends TestCase
 
         $useCase = $this->app->make(GenerateEmbedding::class);
 
-        $text = "Product Title Description";
+        $text = 'Product Title Description';
         $expectedVector = [0.1, 0.2, 0.3];
 
         $aiRepository->shouldReceive('generateEmbedding')
@@ -49,7 +49,7 @@ class GenerateEmbeddingTest extends TestCase
 
         $useCase = $this->app->make(GenerateEmbedding::class);
 
-        $text = "Product Title Description";
+        $text = 'Product Title Description';
 
         $aiRepository->shouldReceive('generateEmbedding')
             ->once()

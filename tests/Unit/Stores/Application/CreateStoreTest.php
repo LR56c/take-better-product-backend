@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Stores\Application;
 
+use App\Models\Country;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Stores\Application\CreateStore;
-use App\Models\Country;
 use Tests\TestCase;
 
 class CreateStoreTest extends TestCase

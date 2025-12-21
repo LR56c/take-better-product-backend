@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BrandController;
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // --- Auth Proxy Endpoints ---
@@ -39,7 +38,6 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
 Route::get('/stores', [StoreController::class, 'index']);
 Route::get('/stores/{id}', [StoreController::class, 'show']);
-
 
 // --- Admin Write Endpoints ---
 Route::middleware(['auth.supabase', 'role:admin'])->group(function () {

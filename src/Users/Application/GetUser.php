@@ -2,12 +2,12 @@
 
 namespace Src\Users\Application;
 
+use InvalidArgumentException;
+use Src\Shared\Domain\ValueObjects\UUIDError;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Src\Users\Domain\Exceptions\UserNotFound;
 use Src\Users\Domain\User;
 use Src\Users\Domain\UserRepository;
-use Src\Users\Domain\Exceptions\UserNotFound;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
-use Src\Shared\Domain\ValueObjects\UUIDError;
-use InvalidArgumentException;
 
 class GetUser
 {
@@ -25,7 +25,7 @@ class GetUser
 
         $user = $this->repository->find($userId);
 
-        if (null === $user) {
+        if ($user === null) {
             throw new UserNotFound($userId);
         }
 

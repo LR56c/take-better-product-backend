@@ -14,6 +14,7 @@ class BrandEndpointsTest extends TestCase
     use RefreshDatabase;
 
     private BrandRepository $repository;
+
     private User $adminUser;
 
     protected function setUp(): void
@@ -134,10 +135,10 @@ class BrandEndpointsTest extends TestCase
         $data = ['name' => 'New Brand'];
 
         $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-                         ->postJson('/api/brands', $data);
+            ->postJson('/api/brands', $data);
 
         $response->assertStatus(201)
-                 ->assertJsonPath('data.name', 'New Brand');
+            ->assertJsonPath('data.name', 'New Brand');
 
         $this->assertDatabaseHas('brands', ['name' => 'New Brand']);
     }
@@ -147,10 +148,10 @@ class BrandEndpointsTest extends TestCase
         $brand = Brand::factory()->create(['name' => 'Old Name']);
 
         $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-                         ->putJson("/api/brands/{$brand->id}", ['name' => 'Updated Name']);
+            ->putJson("/api/brands/{$brand->id}", ['name' => 'Updated Name']);
 
         $response->assertStatus(200)
-                 ->assertJsonPath('data.name', 'Updated Name');
+            ->assertJsonPath('data.name', 'Updated Name');
 
         $this->assertDatabaseHas('brands', ['name' => 'Updated Name']);
     }

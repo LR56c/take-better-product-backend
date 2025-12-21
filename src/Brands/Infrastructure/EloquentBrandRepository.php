@@ -2,13 +2,13 @@
 
 namespace Src\Brands\Infrastructure;
 
+use Illuminate\Database\Eloquent\Builder;
 use Src\Brands\Domain\Brand;
 use Src\Brands\Domain\BrandRepository;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
-use Illuminate\Database\Eloquent\Builder;
 
 class EloquentBrandRepository implements BrandRepository
 {
@@ -51,9 +51,9 @@ class EloquentBrandRepository implements BrandRepository
     {
         foreach ($filters as $field => $value) {
             if (is_array($value)) {
-                 $query->whereIn($field, $value);
+                $query->whereIn($field, $value);
             } else {
-                 $query->where($field, $value);
+                $query->where($field, $value);
             }
         }
     }

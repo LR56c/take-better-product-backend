@@ -25,7 +25,7 @@ class GetCountry
 
         $country = $this->repository->find($countryId);
 
-        if (null === $country) {
+        if ($country === null) {
             throw new CountryNotFound($countryId);
         }
 

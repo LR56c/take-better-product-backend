@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Stores\Application;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Src\Stores\Application\SearchStores;
-use Src\Shared\Domain\Criteria\Criteria;
 use App\Models\Store;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Src\Shared\Domain\Criteria\Criteria;
+use Src\Stores\Application\SearchStores;
 use Tests\TestCase;
 
 class SearchStoresTest extends TestCase

@@ -2,12 +2,12 @@
 
 namespace Src\Stores\Application;
 
+use InvalidArgumentException;
+use Src\Shared\Domain\ValueObjects\UUIDError;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Src\Stores\Domain\Exceptions\StoreNotFound;
 use Src\Stores\Domain\Store;
 use Src\Stores\Domain\StoreRepository;
-use Src\Stores\Domain\Exceptions\StoreNotFound;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
-use Src\Shared\Domain\ValueObjects\UUIDError;
-use InvalidArgumentException;
 
 class UpdateStore
 {
@@ -25,11 +25,11 @@ class UpdateStore
 
         $store = $this->repository->find($storeId);
 
-        if (null === $store) {
+        if ($store === null) {
             throw new StoreNotFound($storeId);
         }
 
-        $data = array_filter($data, fn($value) => $value !== null);
+        $data = array_filter($data, fn ($value) => $value !== null);
         $store->fill($data);
 
         $this->repository->save($store);

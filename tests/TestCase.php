@@ -3,8 +3,8 @@
 namespace Tests;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Firebase\JWT\JWT;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -12,7 +12,7 @@ abstract class TestCase extends BaseTestCase
     {
         $secret = config('services.supabase.jwt_secret');
 
-        if (!$secret) {
+        if (! $secret) {
             $secret = 'dummy-secret-for-testing';
             config(['services.supabase.jwt_secret' => $secret]);
         }
@@ -29,7 +29,7 @@ abstract class TestCase extends BaseTestCase
 
         $token = JWT::encode($payload, $secret, 'HS256');
 
-        $this->withHeader('Authorization', 'Bearer ' . $token);
+        $this->withHeader('Authorization', 'Bearer '.$token);
 
         return $this;
     }

@@ -2,13 +2,13 @@
 
 namespace Src\Stores\Infrastructure;
 
-use Src\Stores\Domain\StoreRepository;
-use Src\Stores\Domain\Store;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Illuminate\Database\Eloquent\Builder;
 use Src\Shared\Domain\Criteria\Criteria;
 use Src\Shared\Domain\SearchResult;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
-use Illuminate\Database\Eloquent\Builder;
+use Src\Stores\Domain\Store;
+use Src\Stores\Domain\StoreRepository;
 
 class EloquentStoreRepository implements StoreRepository
 {
@@ -51,9 +51,9 @@ class EloquentStoreRepository implements StoreRepository
     {
         foreach ($filters as $field => $value) {
             if (is_array($value)) {
-                 $query->whereIn($field, $value);
+                $query->whereIn($field, $value);
             } else {
-                 $query->where($field, $value);
+                $query->where($field, $value);
             }
         }
     }

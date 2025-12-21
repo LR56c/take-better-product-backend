@@ -2,8 +2,8 @@
 
 namespace Src\Products\Application;
 
-use Src\Products\Domain\ProductAiRepository;
 use Illuminate\Support\Facades\Log;
+use Src\Products\Domain\ProductAiRepository;
 
 class GenerateEmbedding
 {

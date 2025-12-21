@@ -2,12 +2,11 @@
 
 namespace Tests\Unit\Products\Application;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
-use Src\Products\Application\SyncProduct;
-use App\Models\Store;
 use App\Models\Product;
+use App\Models\Store;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Products\Application\GenerateEmbedding;
+use Src\Products\Application\SyncProduct;
 use Tests\TestCase;
 
 class SyncProductTest extends TestCase
@@ -42,7 +41,7 @@ class SyncProductTest extends TestCase
         // Assert
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'title' => 'New Product'
+            'title' => 'New Product',
         ]);
 
         $this->assertDatabaseHas('product_embeddings', [
@@ -85,7 +84,7 @@ class SyncProductTest extends TestCase
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
             'title' => 'Updated Title',
-            'price' => 1000
+            'price' => 1000,
         ]);
     }
 }

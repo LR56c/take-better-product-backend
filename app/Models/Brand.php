@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Src\Brands\Domain\Brand as DomainBrand;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Src\Brands\Domain\Brand as DomainBrand;
 
 class Brand extends DomainBrand
 {

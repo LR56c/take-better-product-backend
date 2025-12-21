@@ -5,22 +5,22 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Src\Auth\Domain\AuthRepository;
 use Src\Auth\Infrastructure\SupabaseAuthRepository;
-use Src\Products\Domain\ProductRepository;
-use Src\Products\Infrastructure\EloquentProductRepository;
 use Src\Brands\Domain\BrandRepository;
 use Src\Brands\Infrastructure\EloquentBrandRepository;
-use Src\Countries\Domain\CountryRepository;
-use Src\Countries\Infrastructure\EloquentCountryRepository;
 use Src\Categories\Domain\CategoryRepository;
 use Src\Categories\Infrastructure\EloquentCategoryRepository;
+use Src\Countries\Domain\CountryRepository;
+use Src\Countries\Infrastructure\EloquentCountryRepository;
+use Src\Products\Domain\ProductAiRepository;
+use Src\Products\Domain\ProductEmbeddingRepository;
+use Src\Products\Domain\ProductRepository;
+use Src\Products\Infrastructure\EloquentProductEmbeddingRepository;
+use Src\Products\Infrastructure\EloquentProductRepository;
+use Src\Products\Infrastructure\GeminiProductAiRepository;
 use Src\Stores\Domain\StoreRepository;
 use Src\Stores\Infrastructure\EloquentStoreRepository;
 use Src\Users\Domain\UserRepository;
 use Src\Users\Infrastructure\EloquentUserRepository;
-use Src\Products\Domain\ProductAiRepository;
-use Src\Products\Infrastructure\GeminiProductAiRepository;
-use Src\Products\Domain\ProductEmbeddingRepository;
-use Src\Products\Infrastructure\EloquentProductEmbeddingRepository;
 
 class AppServiceProvider extends ServiceProvider
 {

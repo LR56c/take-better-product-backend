@@ -17,7 +17,7 @@ class UpdateProductRequest extends FormRequest
             'store_id' => ['sometimes', 'uuid', 'exists:stores,id'],
             'title' => ['sometimes', 'string', 'max:255'],
             'price' => ['sometimes', 'numeric', 'min:0'],
-            'url' => ['sometimes', 'url', 'unique:products,url,' . $this->route('id')],
+            'url' => ['sometimes', 'url', 'unique:products,url,'.$this->route('id')],
             'external_id' => ['sometimes', 'string', 'max:255'],
             'currency' => ['nullable', 'string', 'size:3'],
             'brand_id' => ['nullable', 'uuid', 'exists:brands,id'],

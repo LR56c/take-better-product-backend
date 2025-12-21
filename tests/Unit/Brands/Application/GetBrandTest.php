@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Brands\Application;
 
+use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Brands\Application\GetBrand;
 use Src\Brands\Domain\Exceptions\BrandNotFound;
-use App\Models\Brand;
 use Tests\TestCase;
 
 class GetBrandTest extends TestCase

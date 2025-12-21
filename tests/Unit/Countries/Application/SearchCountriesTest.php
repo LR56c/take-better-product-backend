@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Countries\Application;
 
+use App\Models\Country;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Countries\Application\SearchCountries;
 use Src\Shared\Domain\Criteria\Criteria;
-use App\Models\Country;
 use Tests\TestCase;
 
 class SearchCountriesTest extends TestCase

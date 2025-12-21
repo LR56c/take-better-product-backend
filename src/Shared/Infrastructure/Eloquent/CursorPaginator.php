@@ -3,7 +3,6 @@
 namespace Src\Shared\Infrastructure\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 class CursorPaginator
 {
@@ -15,14 +14,14 @@ class CursorPaginator
             $query->orderBy('id', 'asc');
         }
 
-        if (!$cursorId) {
+        if (! $cursorId) {
             return;
         }
 
         $modelClass = $query->getModel()::class;
         $cursorModel = $modelClass::find($cursorId);
 
-        if (!$cursorModel) {
+        if (! $cursorModel) {
             return;
         }
 
@@ -35,10 +34,10 @@ class CursorPaginator
 
             $query->where(function ($q) use ($orderBy, $operator, $value, $cursorId) {
                 $q->where($orderBy, $operator, $value)
-                  ->orWhere(function ($subQ) use ($orderBy, $value, $cursorId) {
-                      $subQ->where($orderBy, $value)
-                           ->where('id', '>', $cursorId);
-                  });
+                    ->orWhere(function ($subQ) use ($orderBy, $value, $cursorId) {
+                        $subQ->where($orderBy, $value)
+                            ->where('id', '>', $cursorId);
+                    });
             });
         }
     }

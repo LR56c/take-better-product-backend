@@ -2,8 +2,8 @@
 
 namespace Src\Stores\Domain;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class StoreCategory extends Pivot
 {

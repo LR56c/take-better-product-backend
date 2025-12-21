@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Products\Application;
 
+use App\Models\Store;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Src\Products\Application\CreateProduct;
-use App\Models\Store;
 use Src\Products\Application\GenerateEmbedding;
 use Tests\TestCase;
 
@@ -43,12 +43,12 @@ class CreateProductTest extends TestCase
         // Assert
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'title' => 'Test Product'
+            'title' => 'Test Product',
         ]);
 
         $this->assertDatabaseHas('price_histories', [
             'product_id' => $product->id,
-            'price' => 1000
+            'price' => 1000,
         ]);
 
         $this->assertDatabaseHas('product_embeddings', [

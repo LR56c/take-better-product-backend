@@ -2,8 +2,8 @@
 
 namespace Src\Products\Domain;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Pgvector\Laravel\Vector;
 
 class ProductEmbedding extends Model

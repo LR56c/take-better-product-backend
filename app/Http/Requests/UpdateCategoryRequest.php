@@ -15,7 +15,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'slug' => ['sometimes', 'string', 'max:255', 'unique:categories,slug,' . $this->route('id')],
+            'slug' => ['sometimes', 'string', 'max:255', 'unique:categories,slug,'.$this->route('id')],
             'parent_id' => ['nullable', 'uuid', 'exists:categories,id'],
         ];
     }

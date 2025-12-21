@@ -2,14 +2,14 @@
 
 namespace Src\Products\Infrastructure;
 
-use Src\Products\Domain\ProductRepository;
-use Src\Products\Domain\Product;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
-use Src\Shared\Domain\Criteria\Criteria;
-use Src\Shared\Domain\SearchResult;
-use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Src\Products\Domain\Product;
+use Src\Products\Domain\ProductRepository;
+use Src\Shared\Domain\Criteria\Criteria;
+use Src\Shared\Domain\SearchResult;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Src\Shared\Infrastructure\Eloquent\CursorPaginator;
 
 class EloquentProductRepository implements ProductRepository
 {
@@ -26,8 +26,8 @@ class EloquentProductRepository implements ProductRepository
     public function findByExternalId(ValidUUID $storeId, string $externalId): ?Product
     {
         return Product::where('store_id', $storeId->value())
-                      ->where('external_id', $externalId)
-                      ->first();
+            ->where('external_id', $externalId)
+            ->first();
     }
 
     public function search(Criteria $criteria): SearchResult
@@ -64,9 +64,9 @@ class EloquentProductRepository implements ProductRepository
     {
         foreach ($filters as $field => $value) {
             if (is_array($value)) {
-                 $query->whereIn($field, $value);
+                $query->whereIn($field, $value);
             } else {
-                 $query->where($field, $value);
+                $query->where($field, $value);
             }
         }
     }

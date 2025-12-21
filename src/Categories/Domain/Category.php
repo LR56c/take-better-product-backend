@@ -2,8 +2,8 @@
 
 namespace Src\Categories\Domain;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Src\Products\Domain\Product;
 use Src\Stores\Domain\Store;
 use Src\Stores\Domain\StoreCategory;
@@ -33,9 +33,9 @@ class Category extends Model
     public function stores()
     {
         return $this->belongsToMany(Store::class, 'store_categories')
-                    ->using(StoreCategory::class) // Use the pivot model logic
-                    ->withPivot('url', 'is_active')
-                    ->withTimestamps();
+            ->using(StoreCategory::class) // Use the pivot model logic
+            ->withPivot('url', 'is_active')
+            ->withTimestamps();
     }
 
     public function products()

@@ -5,8 +5,8 @@ namespace Src\Products\Domain;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Store;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {

@@ -8,13 +8,13 @@ use App\Http\Requests\UpdateBrandRequest;
 use App\Http\Resources\BrandResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
+use Src\Brands\Application\CreateBrand;
 use Src\Brands\Application\GetBrand;
 use Src\Brands\Application\SearchBrands;
-use Src\Brands\Application\CreateBrand;
 use Src\Brands\Application\UpdateBrand;
 use Src\Brands\Domain\Exceptions\BrandNotFound;
 use Src\Shared\Domain\Criteria\Criteria;
-use InvalidArgumentException;
 
 /**
  * @OA\Tag(
@@ -38,38 +38,49 @@ class BrandController extends Controller
      *      tags={"Brands"},
      *      summary="Get list of brands",
      *      description="Returns list of brands with cursor pagination",
+     *
      *      @OA\Parameter(
      *          name="limit",
      *          in="query",
      *          description="Number of items per page",
      *          required=false,
+     *
      *          @OA\Schema(type="integer", default=10)
      *      ),
+     *
      *      @OA\Parameter(
      *          name="cursor",
      *          in="query",
      *          description="Cursor for pagination (ID of the last item)",
      *          required=false,
+     *
      *          @OA\Schema(type="string")
      *      ),
+     *
      *      @OA\Parameter(
      *          name="sort_by",
      *          in="query",
      *          description="Field to sort by",
      *          required=false,
+     *
      *          @OA\Schema(type="string", default="created_at")
      *      ),
+     *
      *      @OA\Parameter(
      *          name="sort_type",
      *          in="query",
      *          description="Sort direction (asc or desc)",
      *          required=false,
+     *
      *          @OA\Schema(type="string", default="desc")
      *      ),
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(
+     *
      *              @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/BrandResource")),
      *              @OA\Property(property="meta", type="object",
      *                  @OA\Property(property="cursor", type="string"),
@@ -78,6 +89,7 @@ class BrandController extends Controller
      *              )
      *          )
      *      ),
+     *
      *      @OA\Response(response=400, description="Bad Request")
      * )
      */
@@ -100,7 +112,7 @@ class BrandController extends Controller
                     'cursor' => $result->items()->last()?->id,
                     'limit' => $criteria->limit(),
                     'total' => $result->total(),
-                ]
+                ],
             ]);
         } catch (InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
@@ -114,18 +126,23 @@ class BrandController extends Controller
      *      tags={"Brands"},
      *      summary="Get brand information",
      *      description="Returns brand data",
+     *
      *      @OA\Parameter(
      *          name="id",
      *          description="Brand id",
      *          required=true,
      *          in="path",
+     *
      *          @OA\Schema(type="string")
      *      ),
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(ref="#/components/schemas/BrandResource")
      *      ),
+     *
      *      @OA\Response(response=400, description="Bad Request"),
      *      @OA\Response(response=404, description="Resource Not Found")
      * )
@@ -134,6 +151,7 @@ class BrandController extends Controller
     {
         try {
             $brand = $this->getBrand->execute($id);
+
             return response()->json(['data' => new BrandResource($brand)]);
         } catch (BrandNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);
@@ -150,15 +168,20 @@ class BrandController extends Controller
      *      summary="Store new brand",
      *      description="Returns brand data",
      *      security={{"bearerAuth":{}}},
+     *
      *      @OA\RequestBody(
      *          required=true,
+     *
      *          @OA\JsonContent(ref="#/components/schemas/StoreBrandRequest")
      *      ),
+     *
      *      @OA\Response(
      *          response=201,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(ref="#/components/schemas/BrandResource")
      *      ),
+     *
      *      @OA\Response(response=400, description="Bad Request"),
      *      @OA\Response(response=422, description="Validation Error")
      * )
@@ -178,22 +201,29 @@ class BrandController extends Controller
      *      summary="Update existing brand",
      *      description="Returns updated brand data",
      *      security={{"bearerAuth":{}}},
+     *
      *      @OA\Parameter(
      *          name="id",
      *          description="Brand id",
      *          required=true,
      *          in="path",
+     *
      *          @OA\Schema(type="string")
      *      ),
+     *
      *      @OA\RequestBody(
      *          required=true,
+     *
      *          @OA\JsonContent(ref="#/components/schemas/UpdateBrandRequest")
      *      ),
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(ref="#/components/schemas/BrandResource")
      *      ),
+     *
      *      @OA\Response(response=400, description="Bad Request"),
      *      @OA\Response(response=404, description="Resource Not Found"),
      *      @OA\Response(response=422, description="Validation Error")
@@ -203,6 +233,7 @@ class BrandController extends Controller
     {
         try {
             $brand = $this->updateBrand->execute($id, $request->validated('name'));
+
             return response()->json(['data' => new BrandResource($brand)]);
         } catch (BrandNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);

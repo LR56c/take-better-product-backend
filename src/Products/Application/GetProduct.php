@@ -2,12 +2,12 @@
 
 namespace Src\Products\Application;
 
-use Src\Products\Domain\ProductRepository;
+use InvalidArgumentException;
 use Src\Products\Domain\Exceptions\ProductNotFound;
 use Src\Products\Domain\Product;
-use Src\Shared\Domain\ValueObjects\ValidUUID;
+use Src\Products\Domain\ProductRepository;
 use Src\Shared\Domain\ValueObjects\UUIDError;
-use InvalidArgumentException;
+use Src\Shared\Domain\ValueObjects\ValidUUID;
 
 class GetProduct
 {
@@ -25,7 +25,7 @@ class GetProduct
 
         $product = $this->repository->find($productId);
 
-        if (null === $product) {
+        if ($product === null) {
             throw new ProductNotFound($productId);
         }
 

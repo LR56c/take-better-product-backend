@@ -13,7 +13,7 @@ class CreateCategory
 
     public function execute(array $data): Category
     {
-        $category = new Category();
+        $category = new Category;
         $category->fill($data);
 
         $this->repository->save($category);

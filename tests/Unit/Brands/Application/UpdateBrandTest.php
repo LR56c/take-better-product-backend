@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Brands\Application;
 
+use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Src\Brands\Application\UpdateBrand;
-use App\Models\Brand;
 use Tests\TestCase;
 
 class UpdateBrandTest extends TestCase

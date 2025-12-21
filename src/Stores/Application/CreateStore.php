@@ -13,7 +13,7 @@ class CreateStore
 
     public function execute(array $data): Store
     {
-        $store = new Store();
+        $store = new Store;
         $store->fill($data);
 
         $this->repository->save($store);

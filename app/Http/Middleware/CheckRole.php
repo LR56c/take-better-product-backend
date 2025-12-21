@@ -18,21 +18,21 @@ class CheckRole
     {
         $user = $request->user();
 
-        if (!$user || !isset($user->jwt_claims)) {
+        if (! $user || ! isset($user->jwt_claims)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         $claims = $user->jwt_claims;
 
         // Access claims as object properties
-        $userMetadata = $claims->user_metadata ?? (object)[];
-        $appMetadata = $claims->app_metadata ?? (object)[];
+        $userMetadata = $claims->user_metadata ?? (object) [];
+        $appMetadata = $claims->app_metadata ?? (object) [];
 
         // We check 'permission' field as requested
         $userPermission = $userMetadata->permission ?? $appMetadata->permission ?? null;
 
         if ($userPermission !== $role) {
-             return response()->json(['error' => 'Forbidden: Insufficient permissions'], 403);
+            return response()->json(['error' => 'Forbidden: Insufficient permissions'], 403);
         }
 
         return $next($request);

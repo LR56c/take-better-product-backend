@@ -13,7 +13,7 @@ class CreateBrand
 
     public function execute(string $name): Brand
     {
-        $brand = new Brand();
+        $brand = new Brand;
         $brand->name = $name;
 
         $this->repository->save($brand);
