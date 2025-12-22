@@ -15,20 +15,20 @@ class UserEndpointsTest extends TestCase
         // Arrange
         $user = User::factory()->create([
             'email' => 'test@example.com',
-            'role' => 'admin',
+            'role' => 'admin'
         ]);
 
         // Act
-        $response = $this->actingAsSupabaseUser($user, 'admin')
-            ->getJson('/api/user');
+        $response = $this->actingAs($user, 'admin')
+                         ->getJson('/api/user');
 
         // Assert
         $response->assertStatus(200)
-            ->assertJson([
-                'id' => $user->id,
-                'email' => 'test@example.com',
-                'role' => 'admin',
-            ]);
+                 ->assertJson([
+                     'id' => $user->id,
+                     'email' => 'test@example.com',
+                     'role' => 'admin'
+                 ]);
     }
 
     public function test_it_returns_unauthorized_if_no_token_is_provided()
@@ -45,12 +45,12 @@ class UserEndpointsTest extends TestCase
         User::factory()->count(5)->create();
 
         // Act
-        $response = $this->actingAsSupabaseUser($admin, 'admin')
-            ->getJson('/api/users');
+        $response = $this->actingAs($admin, 'admin')
+                         ->getJson('/api/users');
 
         // Assert
         $response->assertStatus(200)
-            ->assertJsonCount(6, 'data'); // 5 created + 1 admin
+                 ->assertJsonCount(6, 'data'); // 5 created + 1 admin
     }
 
     public function test_regular_user_cannot_list_users()
@@ -59,8 +59,8 @@ class UserEndpointsTest extends TestCase
         $user = User::factory()->create(['role' => 'user']);
 
         // Act
-        $response = $this->actingAsSupabaseUser($user, 'user')
-            ->getJson('/api/users');
+        $response = $this->actingAs($user, 'user')
+                         ->getJson('/api/users');
 
         // Assert
         $response->assertStatus(403); // Forbidden

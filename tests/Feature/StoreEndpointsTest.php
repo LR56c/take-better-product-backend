@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
-use App\Models\Country;
 use App\Models\Store;
 use App\Models\User;
+use App\Models\Country;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +14,6 @@ class StoreEndpointsTest extends TestCase
     use RefreshDatabase;
 
     private User $adminUser;
-
     private User $regularUser;
 
     protected function setUp(): void
@@ -33,8 +32,8 @@ class StoreEndpointsTest extends TestCase
             'type' => 'supermarket',
         ];
 
-        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-            ->postJson('/api/stores', $storeData);
+        $response = $this->actingAs($this->adminUser, 'admin')
+                         ->postJson('/api/stores', $storeData);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('stores', ['name' => 'New Test Store']);
@@ -49,8 +48,8 @@ class StoreEndpointsTest extends TestCase
             'type' => 'supermarket',
         ];
 
-        $response = $this->actingAsSupabaseUser($this->regularUser, 'user')
-            ->postJson('/api/stores', $storeData);
+        $response = $this->actingAs($this->regularUser, 'user')
+                         ->postJson('/api/stores', $storeData);
 
         $response->assertStatus(403); // Forbidden
     }
@@ -65,11 +64,11 @@ class StoreEndpointsTest extends TestCase
             'categories' => [
                 ['category_id' => $category1->id, 'url' => 'http://a.com', 'is_active' => true],
                 ['category_id' => $category2->id, 'url' => 'http://b.com', 'is_active' => false],
-            ],
+            ]
         ];
 
-        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-            ->postJson("/api/stores/{$store->id}/categories", $syncData);
+        $response = $this->actingAs($this->adminUser, 'admin')
+                         ->postJson("/api/stores/{$store->id}/categories", $syncData);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('store_categories', [

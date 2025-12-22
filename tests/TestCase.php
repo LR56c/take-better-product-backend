@@ -4,33 +4,40 @@ namespace Tests;
 
 use App\Models\User;
 use Firebase\JWT\JWT;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    public function actingAsSupabaseUser(User $user, string $permission = 'admin')
+    /**
+     * Set the currently logged in user for the application.
+     * Overrides the default actingAs to support Supabase JWT generation.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  string|null  $guard  If a string is provided, it's used as the permission/role for the JWT.
+     * @return $this
+     */
+    public function actingAs(Authenticatable $user, $guard = null)
     {
-        $secret = config('services.supabase.jwt_secret');
+        // If a guard is provided, we assume it's a role for a Supabase JWT
+        if (is_string($guard)) {
+            $secret = config('services.supabase.jwt_secret');
 
-        if (! $secret) {
-            $secret = 'dummy-secret-for-testing';
-            config(['services.supabase.jwt_secret' => $secret]);
+            $payload = [
+                'sub' => $user->getAuthIdentifier(),
+                'email' => $user->email,
+                'user_metadata' => [
+                    'permission' => $guard, // Use the guard as the permission
+                ],
+                'iat' => time(),
+                'exp' => time() + 3600,
+            ];
+
+            $token = JWT::encode($payload, $secret, 'HS256');
+
+            $this->withHeader('Authorization', 'Bearer '.$token);
         }
 
-        $payload = [
-            'sub' => $user->id,
-            'email' => $user->email,
-            'user_metadata' => [
-                'permission' => $permission,
-            ],
-            'iat' => time(),
-            'exp' => time() + 3600,
-        ];
-
-        $token = JWT::encode($payload, $secret, 'HS256');
-
-        $this->withHeader('Authorization', 'Bearer '.$token);
-
-        return $this;
+        return parent::actingAs($user);
     }
 }

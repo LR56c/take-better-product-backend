@@ -37,5 +37,8 @@
         <env name="DB_DATABASE" value="testing_db"/>
         <env name="DB_USERNAME" value="sail"/>
         <env name="DB_PASSWORD" value="password"/>
+
+        <!-- Supabase JWT Secret for Testing -->
+        <env name="SUPABASE_JWT_SECRET" value="a-dummy-secret-key-that-is-long-enough-for-hs256"/>
     </php>
 </phpunit>

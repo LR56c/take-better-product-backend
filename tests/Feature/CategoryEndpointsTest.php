@@ -26,8 +26,8 @@ class CategoryEndpointsTest extends TestCase
             'slug' => 'electronics',
         ];
 
-        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-            ->postJson('/api/categories', $data);
+        $response = $this->actingAs($this->adminUser, 'admin')
+                         ->postJson('/api/categories', $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('categories', ['slug' => 'electronics']);
@@ -37,8 +37,8 @@ class CategoryEndpointsTest extends TestCase
     {
         $category = Category::factory()->create(['name' => 'Old Name']);
 
-        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-            ->putJson("/api/categories/{$category->id}", ['name' => 'New Name']);
+        $response = $this->actingAs($this->adminUser, 'admin')
+                         ->putJson("/api/categories/{$category->id}", ['name' => 'New Name']);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('categories', ['name' => 'New Name']);

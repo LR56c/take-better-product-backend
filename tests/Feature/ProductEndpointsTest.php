@@ -3,14 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\Brand;
-use App\Models\Product;
+use App\Models\Category;
 use App\Models\Store;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Pgvector\Laravel\Vector;
-use Src\Products\Application\GenerateEmbedding;
-use Src\Products\Domain\ProductEmbedding; // Use the model
 use Tests\TestCase;
+use Mockery;
+use Src\Products\Application\GenerateEmbedding;
+use Src\Products\Domain\ProductEmbedding;
+use Pgvector\Laravel\Vector;
 
 class ProductEndpointsTest extends TestCase
 {
@@ -44,14 +46,14 @@ class ProductEndpointsTest extends TestCase
             'images' => [
                 ['image_url' => 'http://example.com/image1.jpg', 'main' => true],
                 ['image_url' => 'http://example.com/image2.jpg', 'main' => false],
-            ],
+            ]
         ];
 
-        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-            ->postJson('/api/products', $productData);
+        $response = $this->actingAs($this->adminUser, 'admin')
+                         ->postJson('/api/products', $productData);
 
         $response->assertStatus(201)
-            ->assertJsonPath('data.title', 'New Awesome Product');
+                 ->assertJsonPath('data.title', 'New Awesome Product');
 
         $this->assertDatabaseHas('products', ['title' => 'New Awesome Product']);
         $this->assertDatabaseHas('product_images', ['main' => true]);
@@ -80,11 +82,11 @@ class ProductEndpointsTest extends TestCase
             'currency' => 'USD',
         ];
 
-        $response = $this->actingAsSupabaseUser($this->adminUser, 'admin')
-            ->postJson('/api/products/sync', $syncData);
+        $response = $this->actingAs($this->adminUser, 'admin')
+                         ->postJson('/api/products/sync', $syncData);
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.title', 'Synced Product Title');
+                 ->assertJsonPath('data.title', 'Synced Product Title');
 
         $this->assertDatabaseHas('products', ['price' => 150]);
         $this->assertDatabaseCount('price_histories', 2);
@@ -97,27 +99,25 @@ class ProductEndpointsTest extends TestCase
 
         $this->mock(GenerateEmbedding::class, function ($mock) use ($vectorArray) {
             $mock->shouldReceive('execute')
-                ->with('red lamp')
-                ->andReturn($vectorArray);
+                 ->with('red lamp')
+                 ->andReturn($vectorArray);
         });
 
         $product = Product::factory()->create(['title' => 'Red Lamp']);
 
-        // Use the Domain Model to create the embedding
-        // This ensures the cast (Vector::class) is applied correctly
-        $embedding = new ProductEmbedding;
+        $embedding = new ProductEmbedding();
         $embedding->product_id = $product->id;
         $embedding->vector = new Vector($vectorArray);
         $embedding->save();
 
         $response = $this->postJson('/api/products/search-similar', [
             'query' => 'red lamp',
-            'limit' => 5,
+            'limit' => 5
         ]);
 
         $response->assertStatus(200);
 
-        $this->assertNotEmpty($response->json('data'), 'Search returned no results. DB Count: '.ProductEmbedding::count());
+        $this->assertNotEmpty($response->json('data'), 'Search returned no results. DB Count: ' . ProductEmbedding::count());
 
         $response->assertJsonStructure(['data' => [['id', 'title', 'price']]]);
         $this->assertEquals($product->id, $response->json('data.0.id'));
