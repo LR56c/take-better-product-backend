@@ -2,49 +2,39 @@
 
 namespace Src\Products\Infrastructure;
 
-use Illuminate\Support\Facades\Http;
+use Exception;
+use Gemini\Client;
 use Illuminate\Support\Facades\Log;
 use Src\Products\Domain\ProductAiRepository;
 
 class GeminiProductAiRepository implements ProductAiRepository
 {
-    private string $apiKey;
-
-    private string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent';
+    private ?Client $client = null;
 
     public function __construct()
     {
-        $this->apiKey = config('services.gemini.api_key');
+        $apiKey = config('services.gemini.api_key');
+
+        if (!empty($apiKey)) {
+            $this->client = \Gemini::client($apiKey);
+        }
     }
 
     public function generateEmbedding(string $text): ?array
     {
-        if (empty($this->apiKey)) {
+        if ($this->client === null) {
             Log::warning('Gemini API Key not configured');
 
             return null;
         }
 
         try {
-            $response = Http::post("{$this->baseUrl}?key={$this->apiKey}", [
-                'content' => [
-                    'parts' => [
-                        ['text' => $text],
-                    ],
-                ],
-            ]);
+            $response = $this->client->embeddingModel('models/text-embedding-004')
+                ->embedContent($text);
 
-            if ($response->failed()) {
-                Log::error('Gemini API Error', ['body' => $response->body()]);
+            return $response->embedding->values;
 
-                return null;
-            }
-
-            $data = $response->json();
-
-            return $data['embedding']['values'] ?? null;
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Gemini Connection Error', ['error' => $e->getMessage()]);
 
             return null;
