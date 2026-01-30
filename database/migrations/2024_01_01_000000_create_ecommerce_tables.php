@@ -12,7 +12,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // We only create the extension if the driver is pgsql
         if (DB::connection()->getDriverName() === 'pgsql') {
             DB::statement('CREATE EXTENSION IF NOT EXISTS vector');
         }
