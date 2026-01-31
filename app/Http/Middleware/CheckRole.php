@@ -24,11 +24,9 @@ class CheckRole
 
         $claims = $user->jwt_claims;
 
-        // Access claims as object properties
         $userMetadata = $claims->user_metadata ?? (object) [];
         $appMetadata = $claims->app_metadata ?? (object) [];
 
-        // We check 'permission' field as requested
         $userPermission = $userMetadata->permission ?? $appMetadata->permission ?? null;
 
         if ($userPermission !== $role) {

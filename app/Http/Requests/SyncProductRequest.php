@@ -19,7 +19,7 @@ class SyncProductRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
             'url' => ['required', 'url'],
-            'currency' => ['required', 'string', 'size:3'], // Required for sync
+            'currency' => ['required', 'string', 'size:3'],
             'brand_id' => ['nullable', 'uuid', 'exists:brands,id'],
             'category_id' => ['nullable', 'uuid', 'exists:categories,id'],
             'description' => ['nullable', 'string'],

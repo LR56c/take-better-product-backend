@@ -37,7 +37,6 @@ class SupabaseAuth
                 return response()->json(['error' => 'User not found or not synced'], 401);
             }
 
-            // Store JWT claims as an object
             $user->jwt_claims = $decoded;
 
             Auth::login($user);
