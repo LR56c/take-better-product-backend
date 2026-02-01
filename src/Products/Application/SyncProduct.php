@@ -43,7 +43,6 @@ class SyncProduct
 
             $this->repository->save($product);
 
-            // Generate embedding only for new products
             if (! $existingProduct) {
                 $embeddingText = $product->title.' '.($product->description ?? '');
                 $vector = $this->generateEmbedding->execute($embeddingText);

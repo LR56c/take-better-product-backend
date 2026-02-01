@@ -33,7 +33,7 @@ class Category extends Model
     public function stores()
     {
         return $this->belongsToMany(Store::class, 'store_categories')
-            ->using(StoreCategory::class) // Use the pivot model logic
+            ->using(StoreCategory::class)
             ->withPivot('url', 'is_active')
             ->withTimestamps();
     }

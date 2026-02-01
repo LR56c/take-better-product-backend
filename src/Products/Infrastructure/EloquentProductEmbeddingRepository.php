@@ -18,9 +18,6 @@ class EloquentProductEmbeddingRepository implements ProductEmbeddingRepository
     {
         $vectorString = (new Vector($vector))->__toString();
 
-        // We must inject the vector string directly into the query because
-        // PDO binding would wrap it in quotes, breaking the pgvector syntax.
-        // This is safe because the vector is generated internally.
         $query = "SELECT product_id, 1 - (vector <-> '{$vectorString}') AS similarity
                   FROM product_embeddings
                   ORDER BY vector <-> '{$vectorString}'
