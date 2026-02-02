@@ -31,7 +31,6 @@ class UpdateProduct
         }
 
         return DB::transaction(function () use ($product, $data) {
-            // Check if price changed to record history
             if (isset($data['price']) && (float) $data['price'] !== (float) $product->price) {
                 $product->priceHistories()->create([
                     'price' => $data['price'],
@@ -39,16 +38,12 @@ class UpdateProduct
                 ]);
             }
 
-            // Handle Images Update (Full replacement strategy for simplicity, or append)
             if (isset($data['images'])) {
-                // Option A: Delete old and create new (simplest for sync)
                 $product->images()->delete();
                 $product->images()->createMany($data['images']);
             }
 
-            // Filter nulls and update product
             $data = array_filter($data, fn ($value) => $value !== null);
-            // Remove relations from data array before filling product
             unset($data['images']);
 
             $product->fill($data);
