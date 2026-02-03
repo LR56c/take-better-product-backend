@@ -29,7 +29,6 @@ class CreateProduct
             $product->fill($data);
             $this->repository->save($product);
 
-            // Generate and save embedding
             $embeddingText = $product->title.' '.($product->description ?? '');
             $vector = $this->generateEmbedding->execute($embeddingText);
 

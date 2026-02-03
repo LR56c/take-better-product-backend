@@ -205,7 +205,6 @@ class ProductController extends Controller
     {
         try {
             $product = $this->getProduct->execute($id);
-            // Load relations for detailed view
             $product->load(['store', 'brand', 'category', 'images']);
 
             return response()->json(['data' => new ProductResource($product)]);
@@ -245,7 +244,6 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request): JsonResponse
     {
         $product = $this->createProduct->execute($request->validated());
-        // Load relations after creation
         $product->load(['store', 'brand', 'category', 'images']);
 
         return response()->json(['data' => new ProductResource($product)], 201);
@@ -291,7 +289,6 @@ class ProductController extends Controller
     {
         try {
             $product = $this->updateProduct->execute($id, $request->validated());
-            // Load relations after update
             $product->load(['store', 'brand', 'category', 'images']);
 
             return response()->json(['data' => new ProductResource($product)]);

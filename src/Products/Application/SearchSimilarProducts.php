@@ -23,7 +23,6 @@ class SearchSimilarProducts
             return new SearchResult(new Collection, 0);
         }
 
-        // Get similar products IDs
         $similarResults = $this->embeddingRepository->searchSimilar($vector, $limit);
 
         if (empty($similarResults)) {
@@ -31,12 +30,10 @@ class SearchSimilarProducts
         }
 
         $productIds = array_column($similarResults, 'product_id');
-        // We create a map to easily sort later, preserving the order from vector search
         $orderMap = array_flip($productIds);
 
         $products = $this->productRepository->findByIds($productIds);
 
-        // Sort collection by the order of IDs returned by vector search
         $sortedProducts = $products->sortBy(function ($product) use ($orderMap) {
             return $orderMap[$product->id] ?? 999999;
         })->values();
