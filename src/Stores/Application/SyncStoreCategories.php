@@ -31,11 +31,10 @@ class SyncStoreCategories
             throw new StoreNotFound($id);
         }
 
-        // Format data for sync
         $syncData = [];
         foreach ($categoriesData as $item) {
             $catId = $item['category_id'];
-            unset($item['category_id']); // The rest are pivot attributes
+            unset($item['category_id']);
             $syncData[$catId] = $item;
         }
 
