@@ -9,12 +9,7 @@ class StoreCategory extends Pivot
 {
     use HasUuids;
 
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = true; // Required for Pivot models with UUIDs
+    public $incrementing = true;
 
     protected $table = 'store_categories';
 
