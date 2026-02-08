@@ -25,14 +25,14 @@ class BrandEndpointsTest extends TestCase
 
     public function test_it_can_paginate_brands_using_cursor()
     {
-        // Arrange: Create 15 brands
+        // Arrange
         $brands = Brand::factory()->count(15)->sequence(fn ($sequence) => [
             'created_at' => now()->addMinutes($sequence->index),
         ])->create();
 
         $sortedBrands = $brands->sortByDesc('created_at')->values();
 
-        // Act: Get first page (limit 5)
+        // Act
         $criteriaPage1 = new Criteria(
             limit: 5,
             orderBy: 'created_at',
@@ -46,7 +46,7 @@ class BrandEndpointsTest extends TestCase
         $this->assertEquals($sortedBrands[0]->id, $page1[0]->id);
         $this->assertEquals($sortedBrands[4]->id, $page1[4]->id);
 
-        // Act: Get second page using the last item of page 1 as cursor
+        // Act
         $cursor = $page1->last()->id;
         $criteriaPage2 = new Criteria(
             limit: 5,
