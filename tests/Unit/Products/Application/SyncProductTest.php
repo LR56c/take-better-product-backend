@@ -15,11 +15,10 @@ class SyncProductTest extends TestCase
 
     public function test_it_creates_new_product_if_not_exists()
     {
-        // Mock GenerateEmbedding
         $this->mock(GenerateEmbedding::class, function ($mock) {
             $mock->shouldReceive('execute')
                 ->once()
-                ->andReturn(array_fill(0, 768, 0.1)); // Correct dimension
+                ->andReturn(array_fill(0, 768, 0.1));
         });
 
         // Arrange
