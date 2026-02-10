@@ -50,7 +50,6 @@ class SyncProductTest extends TestCase
 
     public function test_it_updates_existing_product_and_does_not_generate_embedding()
     {
-        // Mock GenerateEmbedding (should NOT be called for update)
         $this->mock(GenerateEmbedding::class, function ($mock) {
             $mock->shouldNotReceive('execute');
         });
