@@ -32,7 +32,7 @@ class GenerateEmbeddingTest extends TestCase
             ->with($text)
             ->andReturn($expectedVector);
 
-        Log::shouldReceive('info')->twice(); // One for start, one for success
+        Log::shouldReceive('info')->twice();
 
         // Act
         $vector = $useCase->execute($text);
