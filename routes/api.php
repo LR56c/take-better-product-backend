@@ -39,7 +39,6 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/stores', [StoreController::class, 'index']);
 Route::get('/stores/{id}', [StoreController::class, 'show']);
 
-// --- Admin Write Endpoints ---
 Route::middleware(['auth.supabase', 'role:admin'])->group(function () {
 
     Route::prefix('brands')->group(function () {

@@ -77,7 +77,7 @@ class ProductEndpointsTest extends TestCase
             'store_id' => $store->id,
             'external_id' => 'SYNC-SKU-001',
             'title' => 'Synced Product Title',
-            'price' => 150, // New price
+            'price' => 150,
             'url' => $product->url,
             'currency' => 'USD',
         ];
