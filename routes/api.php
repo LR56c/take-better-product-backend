@@ -9,20 +9,17 @@ use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-// --- Auth Proxy Endpoints ---
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::middleware('auth.supabase')->put('/user', [AuthController::class, 'update']);
 });
 
-// Authenticated user endpoints
 Route::middleware('auth.supabase')->group(function () {
     Route::get('/user', [UserController::class, 'me']);
     Route::get('/users', [UserController::class, 'index'])->middleware('role:admin');
 });
 
-// --- Public Read-Only Endpoints ---
 Route::get('/brands', [BrandController::class, 'index']);
 Route::get('/brands/{id}', [BrandController::class, 'show']);
 
