@@ -19,7 +19,6 @@ abstract class TestCase extends BaseTestCase
      */
     public function actingAs(Authenticatable $user, $guard = null)
     {
-        // If a guard is provided, we assume it's a role for a Supabase JWT
         if (is_string($guard)) {
             $secret = config('services.supabase.jwt_secret');
 
@@ -27,7 +26,7 @@ abstract class TestCase extends BaseTestCase
                 'sub' => $user->getAuthIdentifier(),
                 'email' => $user->email,
                 'user_metadata' => [
-                    'permission' => $guard, // Use the guard as the permission
+                    'permission' => $guard,
                 ],
                 'iat' => time(),
                 'exp' => time() + 3600,

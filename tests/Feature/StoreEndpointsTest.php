@@ -51,7 +51,7 @@ class StoreEndpointsTest extends TestCase
         $response = $this->actingAs($this->regularUser, 'user')
                          ->postJson('/api/stores', $storeData);
 
-        $response->assertStatus(403); // Forbidden
+        $response->assertStatus(403);
     }
 
     public function test_admin_can_sync_categories_for_store()
