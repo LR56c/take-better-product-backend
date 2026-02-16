@@ -41,7 +41,7 @@ class BrandEndpointsTest extends TestCase
         $result1 = $this->repository->search($criteriaPage1);
         $page1 = $result1->items();
 
-        // Assert Page 1
+        // Assert
         $this->assertCount(5, $page1);
         $this->assertEquals($sortedBrands[0]->id, $page1[0]->id);
         $this->assertEquals($sortedBrands[4]->id, $page1[4]->id);
@@ -57,12 +57,12 @@ class BrandEndpointsTest extends TestCase
         $result2 = $this->repository->search($criteriaPage2);
         $page2 = $result2->items();
 
-        // Assert Page 2
+        // Assert
         $this->assertCount(5, $page2);
         $this->assertEquals($sortedBrands[5]->id, $page2[0]->id);
         $this->assertEquals($sortedBrands[9]->id, $page2[4]->id);
 
-        // Act: Get third page
+        // Act
         $cursor2 = $page2->last()->id;
         $criteriaPage3 = new Criteria(
             limit: 5,
@@ -73,12 +73,12 @@ class BrandEndpointsTest extends TestCase
         $result3 = $this->repository->search($criteriaPage3);
         $page3 = $result3->items();
 
-        // Assert Page 3
+        // Assert
         $this->assertCount(5, $page3);
         $this->assertEquals($sortedBrands[10]->id, $page3[0]->id);
         $this->assertEquals($sortedBrands[14]->id, $page3[4]->id);
 
-        // Act: Get fourth page (should be empty)
+        // Act
         $cursor3 = $page3->last()->id;
         $criteriaPage4 = new Criteria(
             limit: 5,
@@ -94,13 +94,13 @@ class BrandEndpointsTest extends TestCase
 
     public function test_it_handles_sorting_by_name_with_cursor()
     {
-        // Arrange: Create brands with specific names to test alphabetical sorting
+        // Arrange
         $names = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
         foreach ($names as $name) {
             Brand::factory()->create(['name' => $name]);
         }
 
-        // Act: Get first 2 brands ordered by name ASC
+        // Act
         $criteria1 = new Criteria(
             limit: 2,
             orderBy: 'name',
@@ -113,7 +113,7 @@ class BrandEndpointsTest extends TestCase
         $this->assertEquals('Apple', $page1[0]->name);
         $this->assertEquals('Banana', $page1[1]->name);
 
-        // Act: Get next 2 brands
+        // Act
         $cursor = $page1->last()->id;
         $criteria2 = new Criteria(
             limit: 2,
