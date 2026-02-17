@@ -56,8 +56,8 @@ class GenerateEmbeddingTest extends TestCase
             ->with($text)
             ->andReturn(null);
 
-        Log::shouldReceive('info')->once(); // Start log
-        Log::shouldReceive('warning')->once(); // Failure log
+        Log::shouldReceive('info')->once();
+        Log::shouldReceive('warning')->once();
 
         // Act
         $vector = $useCase->execute($text);
