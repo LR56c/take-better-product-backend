@@ -50,7 +50,7 @@ class UserEndpointsTest extends TestCase
 
         // Assert
         $response->assertStatus(200)
-                 ->assertJsonCount(6, 'data'); // 5 created + 1 admin
+                 ->assertJsonCount(6, 'data');
     }
 
     public function test_regular_user_cannot_list_users()
@@ -63,6 +63,6 @@ class UserEndpointsTest extends TestCase
                          ->getJson('/api/users');
 
         // Assert
-        $response->assertStatus(403); // Forbidden
+        $response->assertStatus(403);
     }
 }
