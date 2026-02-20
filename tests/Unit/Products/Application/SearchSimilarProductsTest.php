@@ -25,7 +25,6 @@ class SearchSimilarProductsTest extends TestCase
         $product1 = Product::factory()->make(['id' => 'uuid-1', 'title' => 'Red Lamp']);
         $product2 = Product::factory()->make(['id' => 'uuid-2', 'title' => 'Reddish Lamp']);
 
-        // Mocks
         $generateEmbeddingMock = Mockery::mock(GenerateEmbedding::class);
         $generateEmbeddingMock->shouldReceive('execute')->with($queryText)->andReturn($vector);
 
