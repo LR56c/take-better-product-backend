@@ -37,7 +37,7 @@ class SearchSimilarProductsTest extends TestCase
         $productRepoMock = Mockery::mock(ProductRepository::class);
         $productRepoMock->shouldReceive('findByIds')
             ->with(Mockery::type('array'))
-            ->andReturn(new Collection([$product2, $product1])); // Unordered
+            ->andReturn(new Collection([$product2, $product1]));
 
         $this->app->instance(GenerateEmbedding::class, $generateEmbeddingMock);
         $this->app->instance(ProductEmbeddingRepository::class, $embeddingRepoMock);
