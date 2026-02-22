@@ -50,7 +50,6 @@ class SearchSimilarProductsTest extends TestCase
 
         // Assert
         $this->assertCount(2, $result->items());
-        // Check that the items are re-ordered by similarity (uuid-1 first)
         $this->assertEquals('uuid-1', $result->items()[0]->id);
         $this->assertEquals('uuid-2', $result->items()[1]->id);
     }
